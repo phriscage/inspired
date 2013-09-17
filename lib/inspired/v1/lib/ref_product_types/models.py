@@ -4,7 +4,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../../../../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import Base
-from helpers import BaseExtension
+from helpers import BaseExtension, to_json
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.orm import relationship, backref
@@ -30,6 +30,10 @@ class RefProductType(Base):
 
     def __init__(self, name):
         self.name = name
+
+    #@property
+    #def json(self):
+        #return to_json(self, self.__class__)
 
     #def __repr__(self):
         #return '<User %r>' % (self.name)

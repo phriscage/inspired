@@ -12,17 +12,23 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
 
 app = Flask(__name__)
 
-from inspired.v1.lib.database import db_session
+from database import db_session
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
 
-#@app.errorhandler(404)
-#def default_error_handle(error=None):
-    #return "test"
+@app.errorhandler(400)
+@app.errorhandler(404)
+@app.errorhandler(405)
+@app.errorhandler(500)
+def default_error_handle(error=None):
+    """ handle all errors with json output """
+    return jsonify(error=error.code, message=error.message, success=False), \
+        error.code
 
-from inspired.v1.api.views import api_v1
-app.register_blueprint(api_v1, url_prefix="/api/v1")
+## add each api Blueprint and create the base route
+from inspired.v1.api.product_types.views import product_types
+app.register_blueprint(product_types, url_prefix="/api/v1/product_types")
 
 def bootstrap(**kwargs):
     """bootstraps the application. can handle setup here"""
