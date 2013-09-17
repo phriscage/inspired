@@ -27,7 +27,9 @@ def default_error_handle(error=None):
         error.code
 
 ## add each api Blueprint and create the base route
+from inspired.v1.api.artists.views import artists
 from inspired.v1.api.product_types.views import product_types
+app.register_blueprint(artists, url_prefix="/api/v1/artists")
 app.register_blueprint(product_types, url_prefix="/api/v1/product_types")
 
 def bootstrap(**kwargs):
