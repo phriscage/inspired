@@ -7,7 +7,10 @@ class BaseExtension(MapperExtension):
 
     def before_insert(self, mapper, connection, instance):
         """ set the created_at  """
-        instance.created_at = datetime.datetime.now()
+        datetime_now = datetime.datetime.now()
+        instance.created_at = datetime_now
+        if not instance.updated_at:
+            instance.updated_at = datetime_now
 
     def before_update(self, mapper, connection, instance):
         """ set the updated_at  """

@@ -1,17 +1,15 @@
 from sqlalchemy import *
 from migrate import *
-from sqlalchemy.dialects.mysql import INTEGER
-
-
-from sqlalchemy.dialects.mysql import INTEGER
+from sqlalchemy.dialects.mysql import INTEGER as Integer
 
 
 from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
-videos = Table('videos', post_meta,
-    Column('video_id', INTEGER(unsigned=True), primary_key=True, nullable=False),
-    Column('name', String(length=120), unique=True, index=True, nullable=False),
+ref_product_styles = Table('ref_product_styles', post_meta,
+    Column('ref_product_style_id', Integer(4, unsigned=True), 
+        primary_key=True, nullable=False),
+    Column('name', String(length=60), unique=True, nullable=False),
     Column('created_at', DateTime, nullable=False),
     Column('updated_at', DateTime, nullable=False),
     mysql_engine='InnoDB',
@@ -24,11 +22,11 @@ def upgrade(migrate_engine):
     # migrate_engine to your metadata
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['videos'].create()
+    post_meta.tables['ref_product_styles'].create()
 
 
 def downgrade(migrate_engine):
     # Operations to reverse the above upgrade go here.
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['videos'].drop()
+    post_meta.tables['ref_product_styles'].drop()

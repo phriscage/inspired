@@ -32,11 +32,11 @@ def create_migration(directory, name, create=False):
         ImportError
     """
 
-    directory = '../../lib/inspired/v1/lib'
     if not os.path.isdir(directory):
         raise ValueError("'%s' is not a directory" % directory)
 
     for root, dir_names, file_names in os.walk(directory):
+        dir_obj_name = root.split('/')[-1]
         for file in file_names:
             if re.search(r'^[a-z]+\.py$', file):
                 tmp_model = '.'.join([value for value in os.path.join(root, 

@@ -24,17 +24,18 @@ class VideoSource(Base):
     __mapper_args__ = { 'extension': BaseExtension() }
 
     id = Column('video_source_id', Integer(unsigned=True), primary_key=True)
-    name = Column(String(120), unique=True, index=True, nullable=False)
-    url = Column(String(120), unique=True, index=True, nullable=False)
+    name = Column(String(120), unique=True, nullable=False)
+    url = Column(String(120), nullable=False)
     video_id = Column('video_id', Integer(unsigned=True),
         ForeignKey('videos.video_id', name='fk_video_sources_video_id',
         ondelete="CASCADE"), nullable=False, index=True)
-    video = relationship("Video", backref="video_sources")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, url, video):
         self.name = name
+        self.url = url
+        self.video = video
 
     #def __repr__(self):
         #return '<User %r>' % (self.name)

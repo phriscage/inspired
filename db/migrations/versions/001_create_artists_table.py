@@ -8,7 +8,7 @@ pre_meta = MetaData()
 post_meta = MetaData()
 artists = Table('artists', post_meta,
     Column('artist_id', INTEGER(unsigned=True), primary_key=True, nullable=False),
-    Column('name', String(length=120), nullable=False),
+    Column('name', String(length=120), unique=True, index=True, nullable=False),
     Column('first_name', String(length=60)),
     Column('last_name', String(length=60)),
     Column('created_at', DateTime, nullable=False),

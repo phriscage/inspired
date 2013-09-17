@@ -13,7 +13,7 @@ post_meta = MetaData()
 ## need for ForeignKey relationship creation on artist_videos
 artists = Table('artists', post_meta,
     Column('artist_id', Integer(unsigned=True), primary_key=True, nullable=False),
-    Column('name', String(length=120), nullable=False),
+    Column('name', String(length=120), unique=True, index=True, nullable=False),
     Column('first_name', String(length=60)),
     Column('last_name', String(length=60)),
     Column('created_at', DateTime, nullable=False),
@@ -23,7 +23,7 @@ artists = Table('artists', post_meta,
 )
 videos = Table('videos', post_meta,
     Column('video_id', Integer(unsigned=True), primary_key=True, nullable=False),
-    Column('name', String(length=120), nullable=False),
+    Column('name', String(length=120), unique=True, index=True, nullable=False),
     Column('created_at', DateTime, nullable=False),
     Column('updated_at', DateTime, nullable=False),
     mysql_engine='InnoDB',
@@ -32,9 +32,11 @@ videos = Table('videos', post_meta,
 
 artist_videos = Table('artist_videos', post_meta,
     Column('artist_id', Integer(unsigned=True), ForeignKey('artists.artist_id',
-        name='fk_artist_videos_artist_id', ondelete="CASCADE"), nullable=False),
+        name='fk_artist_videos_artist_id', ondelete="CASCADE"), index=True, 
+        nullable=False),
     Column('video_id', Integer(unsigned=True), ForeignKey('videos.video_id',
-        name='fk_artist_videos_video_id', ondelete="CASCADE"), nullable=False),
+        name='fk_artist_videos_video_id', ondelete="CASCADE"), index=True, 
+        nullable=False),
     mysql_engine='InnoDB',
     mysql_charset='utf8'
 )
