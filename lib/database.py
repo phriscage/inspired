@@ -37,13 +37,13 @@ class Base(object):
 
     @property
     def column_items(self):
+        """ get each class attribute value for the column name """
         return dict((column, getattr(self, column, None)) for column in \
             self.columns)
 
     @property
     def field_items(self):
-        print dict((field, getattr(self, field)) for field in self.fields)
-        
+        """ get each class attribute value for the field name """
         return dict((field, getattr(self, field)) for field in self.fields)
 
     #def __repr__(self):
@@ -51,6 +51,7 @@ class Base(object):
 
     @property
     def to_json(self):
+        """ return a dictionary for field items """
         return self.field_items
         
 
