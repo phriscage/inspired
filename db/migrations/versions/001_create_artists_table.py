@@ -13,6 +13,8 @@ artists = Table('artists', post_meta,
     Column('last_name', String(length=60)),
     Column('created_at', DateTime, nullable=False),
     Column('updated_at', DateTime, nullable=False),
+    mysql_engine='InnoDB',
+    mysql_charset='utf8'
 )
 
 

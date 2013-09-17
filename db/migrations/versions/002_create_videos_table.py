@@ -14,6 +14,8 @@ videos = Table('videos', post_meta,
     Column('name', String(length=120), nullable=False),
     Column('created_at', DateTime, nullable=False),
     Column('updated_at', DateTime, nullable=False),
+    mysql_engine='InnoDB',
+    mysql_charset='utf8'
 )
 
 
