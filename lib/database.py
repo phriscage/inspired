@@ -2,6 +2,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../lib')
 
 from inspired_config import SQLALCHEMY_DATABASE_URI
 
