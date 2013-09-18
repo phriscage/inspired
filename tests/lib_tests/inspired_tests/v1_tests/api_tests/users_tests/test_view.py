@@ -20,9 +20,9 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(
 from inspired_config import SQLALCHEMY_DATABASE_URI
 TEST_URI = SQLALCHEMY_DATABASE_URI + '_test'
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.pool import StaticPool
+#from sqlalchemy import create_engine
+#from sqlalchemy.orm import scoped_session, sessionmaker
+#from sqlalchemy.pool import StaticPool
 
 from database import Base, init_engine, db_session, init_models
 from inspired.v1.lib.users.models import User
@@ -65,8 +65,10 @@ class UsersApiTestCase(unittest.TestCase):
     def tearDown(self):
         """ use subsessions and do a rollback after each test. """
         self.db_session.rollback()
-        #self.session.close()
+        self.db_session.close()
         self.engine.dispose()
+        ## need to clear the table and auto-increment counter
+        self.connection.execute("TRUNCATE users")
         self._ctx.pop()  
 
 
@@ -110,8 +112,6 @@ class UsersApiTestCase(unittest.TestCase):
         self.assertEquals(response.status_code, 201)
         self.assertTrue(json.loads(response.data)['success'])
         self.assertEquals(json.loads(response.data)['data']['id'], 1)
-        ## need to clear the table and auto-increment counter
-        self.connection.execute("TRUNCATE users")
 
 
     def test_add_two_users(self):
@@ -141,8 +141,6 @@ class UsersApiTestCase(unittest.TestCase):
             self.assertEquals(response.status_code, 201)
             self.assertTrue(json.loads(response.data)['success'])
             self.assertEquals(json.loads(response.data)['data']['id'], id)
-        ## need to clear the table and auto-increment counter
-        self.connection.execute("TRUNCATE users")
 
 
     def test_add_two_users_same_email_address(self):
@@ -175,8 +173,6 @@ class UsersApiTestCase(unittest.TestCase):
             else:
                 self.assertEquals(response.status_code, 409)
             self.assertTrue(json.loads(response.data)['success'])
-        ## need to clear the table and auto-increment counter
-        self.connection.execute("TRUNCATE users")
 
 
 if __name__ == "__main__":
