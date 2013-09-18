@@ -41,7 +41,7 @@ class TestUserModel(unittest.TestCase):
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
-        user = User(*args)
+        user = User(**args)
         self.session.add(user)
         self.session.commit()
         self.session.delete(user)
@@ -55,7 +55,7 @@ class TestUserModel(unittest.TestCase):
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
-        user = User(*args)
+        user = User(**args)
         self.session.add(user)
         self.session.commit()
         users = [user]
@@ -69,13 +69,13 @@ class TestUserModel(unittest.TestCase):
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
-        user1 = User(*args)
+        user1 = User(**args)
         args = {
             'email_address': 'abc1.com',
             'first_name': 'Bill',
             'last_name': 'Smith'
         }
-        user2 = User(*args)
+        user2 = User(**args)
         self.session.add(user1)
         self.session.add(user2)
         self.session.commit()
