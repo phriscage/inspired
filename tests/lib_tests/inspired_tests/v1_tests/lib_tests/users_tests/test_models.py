@@ -126,4 +126,8 @@ class TestUserModel(unittest.TestCase):
         self.session.add(user2)
         self.session.commit()
         self.assertEqual([user1, user2], self.session.query(User).all())
+
+
+if __name__ == '__main__':
+    unittest.main()
         
