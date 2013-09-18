@@ -13,11 +13,15 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(
     os.path.realpath(__file__)) + '/../../../../../../conf/'))
 sys.path.insert(0, os.path.abspath(os.path.dirname(
     os.path.realpath(__file__)) + '/../../../../../../tests/lib_tests/'))
+sys.path.insert(0, os.path.abspath(os.path.dirname(
+    os.path.realpath(__file__)) + '/../../../../../../../'))
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.exc import IntegrityError
 
-from inspired.v1.lib.users.models import Base, User
+from database import Base
+from inspired.v1.lib.users.models import User
 
 class TestUserModel(unittest.TestCase):
     """ test the user model """
@@ -25,8 +29,10 @@ class TestUserModel(unittest.TestCase):
     def setUp(self):
         """ setup the mode with initial variables """
         self.engine = create_engine('sqlite:///:memory:')
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        self.session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=self.engine))
+        Base.query = self.session.query_property()
         Base.metadata.create_all(self.engine)
 
     def tearDown(self):
@@ -34,6 +40,18 @@ class TestUserModel(unittest.TestCase):
         Base.metadata.drop_all(self.engine)
         self.session.close()
 
+    def test_create_user(self):
+        """ test creating a user """
+        args = {
+            'email_address': 'abc.com',
+            'first_name': 'Joe',
+            'last_name': 'Schome'
+        }
+        user = User(**args)
+        self.session.add(user)
+        self.session.commit()
+        self.assertEqual(self.session.commit(), None)
+        
     def test_create_and_delete_user(self):
         """ test creating and deleting a user """
         args = {
@@ -45,8 +63,37 @@ class TestUserModel(unittest.TestCase):
         self.session.add(user)
         self.session.commit()
         self.session.delete(user)
-        results = self.session.commit()
-        self.assertEqual(None, None)
+        self.assertEqual(self.session.commit(), None)
+        
+    def test_create_user_with_wrong_attribute(self):
+        """ test creating a user with wrong attribute """
+        args = {
+            'email_address': 'abc.com',
+            'first_name': 'Joe',
+            'last_name': 'Schome',
+            'asdfas': 'asdfs'
+        }
+        self.assertRaises(TypeError, lambda: User(**args))
+        
+    def test_create_two_users_same_email_address(self):
+        """ test creating two users with the same email address """
+        args = {
+            'email_address': 'abc.com',
+            'first_name': 'Joe',
+            'last_name': 'Schome'
+        }
+        user = User(**args)
+        self.session.add(user)
+        self.session.commit()
+        self.session.commit()
+        args = {
+            'email_address': 'abc.com',
+            'first_name': 'Bill',
+            'last_name': 'Smith'
+        }
+        user = User(**args)
+        self.session.add(user)
+        self.assertRaises(IntegrityError, lambda: self.session.commit())
         
     def test_query_all_one_user(self):
         """ test querying a user """
@@ -59,8 +106,7 @@ class TestUserModel(unittest.TestCase):
         self.session.add(user)
         self.session.commit()
         users = [user]
-        result = self.session.query(User).all()
-        self.assertEqual(users, result)
+        self.assertEqual([user], self.session.query(User).all())
         
     def test_query_all_two_users(self):
         """ test querying two users """
@@ -79,7 +125,5 @@ class TestUserModel(unittest.TestCase):
         self.session.add(user1)
         self.session.add(user2)
         self.session.commit()
-        users = [user1, user2]
-        result = self.session.query(User).all()
-        self.assertEqual(users, result)
+        self.assertEqual([user1, user2], self.session.query(User).all())
         
