@@ -70,6 +70,21 @@ class Base(object):
 
 Base.query = db_session.query_property()
 
+def init_models():
+    """ import all the models. 
+    TODO need a more programatic method to do this
+    """
+    import inspired.v1.lib.artists.models
+    import inspired.v1.lib.cast_members.models
+    import inspired.v1.lib.products.models
+    import inspired.v1.lib.ref_product_styles.models
+    import inspired.v1.lib.ref_product_types.models
+    import inspired.v1.lib.retailers.models
+    import inspired.v1.lib.scenes.models
+    import inspired.v1.lib.users.models
+    import inspired.v1.lib.videos.models
+    import inspired.v1.lib.video_sources.models
+    
 def init_db(engine):
     """ initialize the database """
     Base.metadata.drop_all(bind=engine)

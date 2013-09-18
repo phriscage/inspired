@@ -38,8 +38,9 @@ def post():
 
     .. sourcecode:: http
 
-       HTTP/1.1 201 Created
-       Content-Type: application/json
+        HTTP/1.1 201 Created
+        Content-Type: application/json
+        data: {'id': <user id> }
 
 
     :statuscode 201: Created
@@ -57,7 +58,9 @@ def post():
     user = User(**request.json)
     db_session.add(user)
     db_session.commit()
-    return jsonify(message='Created: %s' % User.first_name, success=True), 201
+    message = 'Created: %s' % user.email_address
+    data = dict(id=user.id, email_address=user.email_address)
+    return jsonify(message=message, data=data, success=True), 201
     
 
 @users.route('/<int:user_id>', methods=['GET'])
@@ -82,7 +85,8 @@ def get(user_id):
         data = {
             'email_address': 'abc.com',
             'first_name': 'Joe',
-            'last_name': 'Schome'
+            'last_name': 'Schome',
+            ...
         }
 
     :statuscode 200: success
@@ -91,7 +95,6 @@ def get(user_id):
     try:
         message = 'success'
         data = User.query.filter(User.id==user_id).first()
-        #data = db_session.query(User).filter(User.id==user_id).first()
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
         return jsonify(message=message, success=False), 500
@@ -99,6 +102,7 @@ def get(user_id):
         message = "'%s' record does not exist." % user_id
         return jsonify(error=404, message=message, success=False), 404
     else:
+        ## need to use the JSONEncoder class for datetime objects
         data = data.to_json
         response = make_response(json.dumps(dict(data=data, message=message,
             success=True), cls=JSONEncoder))
