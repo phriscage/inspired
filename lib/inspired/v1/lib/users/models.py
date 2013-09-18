@@ -29,7 +29,7 @@ class User(Base):
 
     id = Column('user_id', Integer(unsigned=True), primary_key=True)
     email_address = Column(String(255), unique=True, index=True, nullable=False)
-    user_name = Column(String(120), unique=True, index=True, nullable=False)
+    user_name = Column(String(120), unique=True, index=True)
     first_name = Column(String(120))
     last_name = Column(String(120))
     created_at = Column(DateTime(), nullable=False)
@@ -37,7 +37,7 @@ class User(Base):
 
     def __init__(self, email_address, user_name=None, first_name=None, 
         last_name=None):
-        self.email_address = name
+        self.email_address = email_address
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name

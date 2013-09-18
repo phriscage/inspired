@@ -20,7 +20,7 @@ def upgrade():
         'users', 
         Column('user_id', Integer(unsigned=True), primary_key=True, nullable=False),
         Column('email_address', String(length=255), unique=True, index=True, nullable=False),
-        Column('user_name', String(length=120), unique=True, index=True, nullable=False),
+        Column('user_name', String(length=120), unique=True, index=True),
         Column('first_name', String(length=120)),
         Column('last_name', String(length=120)),
         Column('created_at', DateTime, nullable=False),
