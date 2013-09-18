@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import unittest
+import mock
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(
@@ -30,33 +31,44 @@ class UsersApiTestCase(unittest.TestCase):
     """Tests for the API /v1/users methods"""
 
     @classmethod
-    def setUpClass(self):
-        """Bootstrap test environment"""
-        #inspired.v1.api.main.app.debug = True
-        #app.debug = True
-        #app.config['TESTING'] = True
-        #app.config['CSRF_ENABLED'] = False
-        #app = create_app('sqlite:///test.db')
-        self.app = create_app('sqlite:///:memory:')
-        self.app.config['TESTING'] = True
-        self.app.config['CSRF_ENABLED'] = False
-        self.client = self.app.test_client()
-        #self.engine = create_engine('sqlite://',
+    def setUpClass(cls):
+        """Bootstrap test environment by creating the db engine and app """
+        cls.app = create_app('sqlite:///:memory:')
+        cls.app.config['TESTING'] = True
+        cls.app.config['CSRF_ENABLED'] = False
+        cls.client = cls.app.test_client()
+        #cls.engine = create_engine('sqlite:///:memory:',
                     #connect_args={'check_same_thread':False},
                     #poolclass=StaticPool)
-        self.engine = create_engine('sqlite:///:memory:')
-        self.session = scoped_session(sessionmaker(autocommit=False,
+        cls._ctx = cls.app.test_request_context()
+        cls._ctx.push()
+        cls.engine = create_engine('sqlite:///:memory:')
+        cls.session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
-                                         bind=self.engine))
-        Base.query = self.session.query_property()
-        Base.metadata.create_all(self.engine)
+                                         bind=cls.engine))
+        Base.query = cls.session.query_property()
+        Base.metadata.create_all(cls.engine)
 
     @classmethod
-    def tearDownClass(self):
-        """Delete the test MySQL lite connection"""
+    def tearDownClass(cls):
+        """Delete the test schema and connection """
         #cls.patcher.stop()
-        Base.metadata.drop_all(self.engine)
-        self.session.close()
+        Base.metadata.drop_all(cls.engine)
+        cls.session.close()
+
+    def setUp(self):
+        """ use subsessions and do a rollback after each test. """
+        self._ctx = self.app.test_request_context()
+        self._ctx.push()
+        self.session.begin(subtransactions=True)
+
+    def tearDown(self):
+        """ use subsessions and do a rollback after each test. """
+        self.session.rollback()
+        #self.session.close()
+        self.engine.dispose()
+        self._ctx.pop()  
+
 
     def test_check_if_user_exists(self):
         """ testing checking if a user exists """
@@ -76,11 +88,14 @@ class UsersApiTestCase(unittest.TestCase):
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
         for var in ['email_address', 'first_name', 'last_name']:
-            self.assertEquals(json.loads(response.data)['data'][var], locals()[var])
+            self.assertEquals(json.loads(response.data)['data'][var], 
+                locals()[var])
         self.session.delete(user)
         self.assertEqual(self.session.commit(), None)
 
 
+    #@mock.patch('database.db_session')
+    #def test_add_one_user(self, db_session):
     def test_add_one_user(self):
         """ testing adding a user """
         email_address = 'abc.com'
@@ -105,7 +120,8 @@ class UsersApiTestCase(unittest.TestCase):
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
         for var in ['email_address', 'first_name', 'last_name']:
-            self.assertEquals(json.loads(response.data)['data'][var], locals()[var])
+            self.assertEquals(json.loads(response.data)['data'][var], 
+                locals()[var])
         self.session.delete(user)
         self.assertEqual(self.session.commit(), None)
 
