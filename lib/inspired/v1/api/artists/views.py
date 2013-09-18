@@ -140,9 +140,9 @@ def get(artist_id):
        Content-Type: application/json
 
        {
-         "data": {
-             "name": "originial",
-            }
+        "name": "Joe Schmoe",
+        "first_name": "Joe",
+        "second_name": "Schmoe"
        }
 
     :statuscode 200: success

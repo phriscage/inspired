@@ -12,6 +12,7 @@ import imp
 import inspect
 import re
 import argparse
+from datetime import datetime
 from migrate.versioning import api
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../conf')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
@@ -56,9 +57,11 @@ def create_migration(directory, name, create=False):
     if len(script) == 498: 
         raise ValueError("No change in migration directory: '%s'" % directory)
     if create:
-        migration_file = (SQLALCHEMY_MIGRATE_REPO + '/versions/%03d_%s.py' % (
-            api.db_version(SQLALCHEMY_DATABASE_URI, 
-            SQLALCHEMY_MIGRATE_REPO) + 1, name))
+        #migration_file = (SQLALCHEMY_MIGRATE_REPO + '/versions/%03d_%s.py' % (
+            #api.db_version(SQLALCHEMY_DATABASE_URI, 
+            #SQLALCHEMY_MIGRATE_REPO) + 1, name))
+        migration_file = (SQLALCHEMY_MIGRATE_REPO + '/versions/%s_%s.py' % (
+            datetime.now().strftime('%Y%m%d%H%M%S'), name))
         open(migration_file, "wt").write(script)
         #api.upgrade(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
         print "New migration saved: '%s'" % migration_file

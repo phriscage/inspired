@@ -1,10 +1,11 @@
 """ the retailers.models file contains the all the specific models """
+from __future__ import absolute_import
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../../../../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import Base
-from helpers import BaseExtension
+from inspired.v1.lib.helpers import BaseExtension
 #from retailer_sources.models import RetailerSource
 #from scenes.models import Scene
 from sqlalchemy import Column, String, DateTime, Table, ForeignKey

@@ -1,10 +1,11 @@
 """ the ref_product_types.models file contains the all the specific models """
+from __future__ import absolute_import
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../../../../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import Base
-from helpers import BaseExtension, to_json
+from inspired.v1.lib.helpers import BaseExtension
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.orm import relationship, backref
