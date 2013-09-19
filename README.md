@@ -17,9 +17,9 @@ The application folder structure is defined below:
                 api/
                     <object>/
     www/
-        inspired/
-            templates/
-            static/
+        templates/
+            <object>/
+        static/
             <object>/
     db/
         migrations/
@@ -37,10 +37,16 @@ The application folder structure is defined below:
 Quick Start
 -------------------------
 
-Execute main.py to launch the app.
+Execute ./lib/main.py to launch the API.
 
-    $ ./lib/main.py
+    $ ./lib/main.py 
     * Running on http://0.0.0.0:8000/
+    * Restarting with reloader
+
+Execute ./www/main.py to launch the UI.
+
+    $ ./www/main.py --port 8080
+    * Running on http://0.0.0.0:8080/
     * Restarting with reloader
 
 
