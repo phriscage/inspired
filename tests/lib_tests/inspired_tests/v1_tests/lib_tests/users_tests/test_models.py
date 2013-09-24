@@ -62,6 +62,7 @@ class TestUserModel(unittest.TestCase):
         """ test creating a user """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
@@ -74,6 +75,7 @@ class TestUserModel(unittest.TestCase):
         """ test creating and deleting a user """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
@@ -88,6 +90,7 @@ class TestUserModel(unittest.TestCase):
         """ test creating a user with wrong attribute """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome',
             'asdfas': 'asdfs'
@@ -100,6 +103,7 @@ class TestUserModel(unittest.TestCase):
         """ test creating two users with the same email address """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
@@ -108,6 +112,7 @@ class TestUserModel(unittest.TestCase):
         self.db_session.commit()
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Bill',
             'last_name': 'Smith'
         }
@@ -120,6 +125,7 @@ class TestUserModel(unittest.TestCase):
         """ test querying a user """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
@@ -134,12 +140,14 @@ class TestUserModel(unittest.TestCase):
         """ test querying two users """
         args = {
             'email_address': 'abc.com',
+            'password': 'abc',
             'first_name': 'Joe',
             'last_name': 'Schome'
         }
         user1 = User(**args)
         args = {
             'email_address': 'abc1.com',
+            'password': 'abc',
             'first_name': 'Bill',
             'last_name': 'Smith'
         }

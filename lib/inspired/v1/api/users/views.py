@@ -49,7 +49,8 @@ def post():
     :statuscode 400: Bad Request
     :statuscode 409: Conflict
     """
-    if not request.json or 'email_address' not in request.json:
+    if not request.json or 'email_address' not in request.json or \
+        'password' not in request.json:
         abort(400)
     try:
         user = User.query.filter(User.email_address == \

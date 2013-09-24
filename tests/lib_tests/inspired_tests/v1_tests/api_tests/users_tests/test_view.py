@@ -77,8 +77,10 @@ class UsersApiTestCase(unittest.TestCase):
         email_address = 'abc.com'
         first_name = 'Joe'
         last_name = 'Schome'
+        password = 'abc'
         args = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }
@@ -101,8 +103,10 @@ class UsersApiTestCase(unittest.TestCase):
         email_address = 'abc.com'
         first_name = 'Joe'
         last_name = 'Schome'
+        password = 'abc'
         args = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }
@@ -119,16 +123,20 @@ class UsersApiTestCase(unittest.TestCase):
         email_address = 'abc.com'
         first_name = 'Joe'
         last_name = 'Schome'
+        password = 'abc'
         args = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }
         email_address = 'xyz.com'
         first_name = 'Bill'
         last_name = 'Smith'
+        password = 'abc'
         args2 = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }
@@ -148,16 +156,20 @@ class UsersApiTestCase(unittest.TestCase):
         email_address = 'abc.com'
         first_name = 'Joe'
         last_name = 'Schome'
+        password = 'abc'
         args = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }
         email_address = 'abc.com'
         first_name = 'Bill'
         last_name = 'Smith'
+        password = 'abc'
         args2 = {
             'email_address': email_address,
+            'password': password,
             'first_name': first_name,
             'last_name': last_name
         }

@@ -7,16 +7,17 @@ import sys
 import os
 import argparse
 
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../lib')
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
+sys.path.insert(0, os.path.dirname(
+    os.path.realpath(__file__)) + '/../../../../lib')
+sys.path.insert(0, os.path.dirname(
+    os.path.realpath(__file__)) + '/../../../../conf')
 
 from inspired_config import SQLALCHEMY_DATABASE_URI
 
-from database import Base
+from database import init_engine, db_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, create_session, sessionmaker
 
-from database import init_engine, db_session
 
 def create_app(uri):
     """ dynamically create the app """

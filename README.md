@@ -50,7 +50,7 @@ Verify the Alembic database migrations complete successfully:
 
 Execute ./lib/main.py to launch the API.
 
-    $ ./lib/main.py 
+    $ ./lib/inspired/v1/api/main.py 
     * Running on http://0.0.0.0:8000/
     * Restarting with reloader
 

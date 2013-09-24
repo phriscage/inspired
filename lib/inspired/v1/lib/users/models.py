@@ -11,6 +11,7 @@ from sqlalchemy import Column, String, DateTime, Table, ForeignKey
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 #from sqlalchemy.schema import CreateTable
 from sqlalchemy.orm import relationship, backref
+from werkzeug import generate_password_hash, check_password_hash
 
 
 class User(Base):
@@ -32,15 +33,26 @@ class User(Base):
     user_name = Column(String(120), unique=True, index=True)
     first_name = Column(String(120))
     last_name = Column(String(120))
+    password = Column(String(120))
+    api_key = Column(String(40))
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, email_address, user_name=None, first_name=None, 
+    def __init__(self, email_address, password, user_name=None, first_name=None,
         last_name=None):
         self.email_address = email_address
+        self.set_password(password)
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name
+
+    def set_password(self, password):
+        """ set the password using werkzeug generate_password_hash """
+        self.password = generate_password_hash(password)
+   
+    def check_password(self, password):
+        """ check the password using werkzeug check_password_hash """
+        return check_password_hash(self.password, password)
 
     def is_authenticated(self):
         """ should just return True unless the object represents a user 
