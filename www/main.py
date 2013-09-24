@@ -2,20 +2,26 @@
 """
 UI bootstrap file
 """
-from flask import Flask, jsonify
 import sys
 import os
 import argparse
+from flask import Flask, jsonify
+from flask.ext.login import LoginManager
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
 
 import landing
+from auth.views import auth
+
+login_manager = LoginManager()
 
 def bootstrap(**kwargs):
     """bootstraps the application. can handle setup here"""
     app = Flask(__name__, static_url_path='/static', static_folder='./static')
+    #login_manager.init_app(app)
     app.register_blueprint(landing.app)
+    app.register_blueprint(auth, url_prefix='/auth')
     app.debug = True
     app.run(host=kwargs['host'], port=kwargs['port'])
 
