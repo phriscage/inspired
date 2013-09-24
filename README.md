@@ -37,6 +37,17 @@ The application folder structure is defined below:
 Quick Start
 -------------------------
 
+Create the database from the db/create.sql
+    
+    $ mysql -uroot -p < db/create.sql
+
+Verify the Alembic database migrations complete successfully:
+
+    $ cd db
+    $ $ alembic upgrade head
+    INFO  [alembic.migration] Context impl MySQLImpl.
+    INFO  [alembic.migration] Will assume non-transactional DDL.
+
 Execute ./lib/main.py to launch the API.
 
     $ ./lib/main.py 
