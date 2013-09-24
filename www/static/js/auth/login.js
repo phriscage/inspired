@@ -12,14 +12,22 @@
         };
         $.ajax({
           type: 'POST',
-          url: 'http://api-dev.inspiredapp.tv:8001/api/v1/users/',
-          crossDomain: true,
+          url: '/auth/login',
           data: JSON.stringify(data),
           contentType: 'application/json',
-          success: function (data, status) {
+          success: function (response, status) {
             console.log("Success!!");
-            console.log(data);
-            console.log(status);
+            console.log(response.redirect);
+            //console.log(response);
+            //window.location.href = response;
+            //window.location.replace(
+            if (response.redirect) {
+                // response.redirect contains the string URL to redirect to
+                window.location.href = response.redirect;
+            } else {
+                // response.form contains the HTML for the replacement form
+                $("#email-login-container-form").replaceWith(response.form);
+            }
           },
           error: function (xhr, desc, err) {
             <!--console.log(xhr);-->

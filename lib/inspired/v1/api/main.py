@@ -13,10 +13,7 @@ sys.path.insert(0, os.path.dirname(
     os.path.realpath(__file__)) + '/../../../../conf')
 
 from inspired_config import SQLALCHEMY_DATABASE_URI
-
 from database import init_engine, db_session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, create_session, sessionmaker
 
 
 def create_app(uri):
@@ -24,7 +21,7 @@ def create_app(uri):
     app = Flask(__name__)
     #app.config.from_pyfile(config)
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
-    init_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    init_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=3600)
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
@@ -36,7 +33,7 @@ def create_app(uri):
     @app.errorhandler(500)
     def default_error_handle(error=None):
         """ handle all errors with json output """
-        return jsonify(error=error.code, message=error.message, success=False), \
+        return jsonify(error=error.code, message=error.message, success=False),\
             error.code
 
     ## add each api Blueprint and create the base route
