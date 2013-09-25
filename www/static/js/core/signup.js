@@ -2,17 +2,22 @@
     /**
      * Handle submit for user
      */
-    $('#email-login-container-form').submit(function(e){
+    $('#email-signup-container-form').submit(function(e){
         e.preventDefault();
+        var first_name = $('#first_name').val();
+        var last_name = $('#last_name').val();
         var email_address = $('#email_address').val();
         var password = $('#password').val();
         var data = {
+            'first_name': first_name,
+            'last_name': last_name,
             'email_address': email_address,
             'password': password
         };
         $.ajax({
           type: 'POST',
-          url: '/auth/login',
+          crossDomain: true,
+          url: api_url,
           data: JSON.stringify(data),
           contentType: 'application/json',
           success: function (response, status) {

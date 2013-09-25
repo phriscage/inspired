@@ -4,27 +4,31 @@
     <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
-    <script src="{{ url_for('static', filename='js/auth/login.js') }}"></script>
+    <script type="text/javascript">
+        var api_url = '{{ api_url }}';
+    </script>
+    <script src="{{ url_for('static', filename='js/core/signup.js') }}"></script>
 {% endblock %}
 
 {% block content %}
 
     <div class="row landing-container-wrapper">
       <div class="landing-button-group small-10 large-5 columns">
-        <button class="landing-button" id="email-reg-btn">Manual Email Login</button>
-        <button class="landing-button" id="facebook-connect-btn">Instant Facebook Connect</button>
+        <button class="landing-button" id="email-reg-btn">Sign-up</button>
       </div>
-    </div>             
+    </div>
 
     <div class="row">
-      <form id="email-login-container-form" action="#" class="email-login-container small-10 large-5 columns">
+      <form id="email-signup-container-form" action="#" class="email-login-container small-10 large-5 columns">
         <fieldset>
+              <input id="first_name" type="first_name" name="first_name" placeholder="Joe" required>
+              <input id="last_name" type="last_name" name="last_name" placeholder="Schmoe" required>
               <input id="email_address" type="email" name="email_address" placeholder="ex. joe@abc.com" required>
               <input id="password" type="password" name="password" placeholder="ex. t0pS3cRet" required>
         </fieldset>
         <button id="back-login">Back</button>
-        <button id="get-inspired-button">Get Inspired</button>
+        <button id="get-inspired-button">Submit</button>
       </form>
-    </div>    
-
+    </div>
+     
 {% endblock %}
