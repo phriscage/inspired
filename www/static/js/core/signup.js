@@ -17,18 +17,19 @@
         $.ajax({
           type: 'POST',
           crossDomain: true,
-          url: api_url,
+          url: api_url + '/api/v1/users/',
           data: JSON.stringify(data),
           contentType: 'application/json',
-          success: function (response, status) {
+          success: function (response, status, xhr) {
             console.log("Success!!");
             console.log(response.data);
-            if (response.code === 302) {
+            console.log(xhr.status);
+            if (xhr.status === 201) {
                 // response.redirect contains the string URL to redirect to
-                window.location.href = response.url;
+                window.location.href = '/auth/login';
             } else {
                 // response.form contains the HTML for the replacement form
-                $("#email-login-container-form").replaceWith(response.form);
+                $("#first_name").replaceWith(response.message);
             }
           },
           error: function (xhr, desc, err) {
