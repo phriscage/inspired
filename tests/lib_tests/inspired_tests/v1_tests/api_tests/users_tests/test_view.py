@@ -26,7 +26,7 @@ TEST_URI = SQLALCHEMY_DATABASE_URI + '_test'
 
 from database import Base, init_engine, db_session, init_models
 from inspired.v1.lib.users.models import User
-from lib.main import  create_app
+from inspired.v1.api.main import  create_app
 
 class UsersApiTestCase(unittest.TestCase):
     """Tests for the API /v1/users methods"""

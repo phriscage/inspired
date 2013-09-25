@@ -28,7 +28,7 @@ TEST_URI = SQLALCHEMY_DATABASE_URI + '_test'
 from database import Base, init_engine, db_session, init_models
 from inspired.v1.lib.scenes.models import Scene
 from inspired.v1.lib.videos.models import Video
-from lib.main import  create_app
+from inspired.v1.api.main import  create_app
 
 class ScenesApiTestCase(unittest.TestCase):
     """Tests for the API /v1/scenes methods"""
@@ -84,6 +84,7 @@ class ScenesApiTestCase(unittest.TestCase):
         self.db_session.add(scene)
         self.db_session.commit()    
         response = self.client.get('/api/v1/scene/%i' % scene.id)
+        #print response
         self.assertEquals(response.status_code, 200)
         #self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
