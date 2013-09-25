@@ -27,12 +27,19 @@ def login():
             user = User.query.filter(User.email_address == \
                 request.json['email_address']).one()
         except NoResultFound as error:
-            print error
-            return jsonify(url=url_for('core.signup'), success=True, code=302)
-        login_user(user)
-        #flash("'%s' logged in successfully." % user.email_address)
-        return jsonify(url=url_for('user.settings', user_id=user.id), 
-            success=True, code=302)
+            #return jsonify(url=url_for('core.signup'), success=True, code=302)
+            message = "Unknown email_address or password"
+            print "User DNE"
+            return jsonify(message=message, success=True, code=400)
+        if user.check_password(request.json['password']):
+            login_user(user)
+            #flash("'%s' logged in successfully." % user.email_address)
+            return jsonify(url=url_for('user.settings', user_id=user.id), 
+                success=True, code=302)
+        else:
+            message = "Unknown email_address or password"
+            print "Password incorrect"
+            return jsonify(message=message, success=True, code=400)
         #return redirect(url_for('user.settings', user_id=user.id))
     else:
         if g.user is not None and g.user.is_authenticated():

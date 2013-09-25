@@ -15,15 +15,17 @@
           url: '/auth/login',
           data: JSON.stringify(data),
           contentType: 'application/json',
-          success: function (response, status) {
+          success: function (response, status, xhr) {
             console.log("Success!!");
             console.log(response.data);
-            if (response.code === 302) {
+            console.log(xhr.status);
+            if (xhr.status === 200 && response.code == 302) {
                 // response.redirect contains the string URL to redirect to
                 window.location.href = response.url;
             } else {
                 // response.form contains the HTML for the replacement form
-                $("#email-login-container-form").replaceWith(response.form);
+                console.log(response.message)
+                $("password").replaceWith(response.message);
             }
           },
           error: function (xhr, desc, err) {
