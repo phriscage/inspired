@@ -42,9 +42,13 @@ def create_app(uri):
     from inspired.v1.api.artists.views import artists
     from inspired.v1.api.product_types.views import product_types
     from inspired.v1.api.users.views import users
+    from inspired.v1.api.scenes.views import scenes
+    from inspired.v1.api.videos.views import videos
     app.register_blueprint(artists, url_prefix="/api/v1/artists")
     app.register_blueprint(product_types, url_prefix="/api/v1/product_types")
     app.register_blueprint(users, url_prefix="/api/v1/users")
+    app.register_blueprint(scenes,url_prefix="/api/v1/scene")
+    app.register_blueprint(videos, url_prefix="/api/v1/video")
 
     return app
 

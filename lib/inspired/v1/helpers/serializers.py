@@ -9,9 +9,8 @@ class JSONEncoder(json.JSONEncoder):
     """
 
     def default(self, obj):
-        if isinstance(obj, datetime.date):
+        if isinstance(obj, datetime.date) or isinstance(obj, datetime.time):
             return obj.isoformat()
-
         try:
             return obj.tojson()
         except AttributeError:

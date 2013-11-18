@@ -11,7 +11,7 @@ import mock
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(
-    os.path.realpath(__file__)) + '/../../../../../../../'))
+    os.path.realpath(__file__)) + '../../../../../../../'))
 sys.path.insert(0, os.path.abspath(os.path.dirname(
     os.path.realpath(__file__)) + '/../../../../../../lib/'))
 sys.path.insert(0, os.path.abspath(os.path.dirname(
