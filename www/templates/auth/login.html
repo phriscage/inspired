@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
+    <script src="{{ url_for('static', filename='js/auth/login.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row landing-container-wrapper">
+      <div class="landing-button-group small-10 large-5 columns">
+        <button class="landing-button" id="email-reg-btn">Manual Email Login</button>
+        <button class="landing-button" id="facebook-connect-btn">Instant Facebook Connect</button>
+      </div>
+    </div>             
+
+    <div class="row">
+      <form id="email-login-container-form" action="#" class="email-login-container small-10 large-5 columns">
+        <fieldset>
+              <input id="email_address" type="email" name="email_address" placeholder="ex. joe@abc.com" required>
+              <input id="password" type="password" name="password" placeholder="ex. t0pS3cRet" required>
+              <a class="reset-passwd" href="#">?</a>
+        </fieldset>
+        <button id="back-login">Back</button>
+        <button id="get-inspired-button">Get Inspired</button>
+      </form>
+    </div>    
+
+{% endblock %}

@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import db_session
 ## need to import all child models for now
 from inspired.v1.lib.users.models import User
+from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
 
 from flask import Blueprint, jsonify, request, abort, make_response
@@ -17,7 +18,8 @@ import json
 users = Blueprint('users', __name__)
 
 #create routes
-@users.route('/', methods=['POST'])
+@users.route('/', methods=['POST', 'OPTIONS'])
+@crossdomain(origin="*", methods=['POST', 'OPTIONS'], headers='Content-Type')
 #@requires_api_key
 def post():
     """Create a new user.
@@ -47,7 +49,8 @@ def post():
     :statuscode 400: Bad Request
     :statuscode 409: Conflict
     """
-    if not request.json or 'email_address' not in request.json:
+    if not request.json or 'email_address' not in request.json or \
+        'password' not in request.json:
         abort(400)
     try:
         user = User.query.filter(User.email_address == \
@@ -64,6 +67,7 @@ def post():
     
 
 @users.route('/<int:user_id>', methods=['GET'])
+@crossdomain(origin="*", methods=['GET'], headers='Content-Type')
 #@requires_api_key
 def get(user_id):
     """Get a user identified by `user_id`.

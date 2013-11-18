@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row landing-container-wrapper">
+        <div class="landing-button-group small-10 large-5 columns">
+            <h4>Index</h4>
+        </div>
+    </div>             
+
+{% endblock %}
