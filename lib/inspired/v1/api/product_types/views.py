@@ -15,7 +15,7 @@ import json
 product_types = Blueprint('product_types', __name__)
 
 #create routes
-@product_types.route('/', methods=['GET'])
+@product_types.route('', methods=['GET'])
 #@requires_api_key
 def get_all():
     """Get all the product_types.

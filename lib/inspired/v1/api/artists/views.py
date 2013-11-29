@@ -24,7 +24,7 @@ import json
 artists = Blueprint('artists', __name__)
 
 #create routes
-@artists.route('/', methods=['GET'])
+@artists.route('', methods=['GET'])
 #@requires_api_key
 def get_all():
     """Get all the artists.
@@ -73,7 +73,7 @@ def get_all():
 
 
 #create routes
-@artists.route('/', methods=['POST'])
+@artists.route('', methods=['POST'])
 #@requires_api_key
 def post():
     """Create a new artist.

@@ -18,7 +18,7 @@ import json
 users = Blueprint('users', __name__)
 
 #create routes
-@users.route('/', methods=['POST', 'OPTIONS'])
+@users.route('', methods=['POST', 'OPTIONS'])
 @crossdomain(origin="*", methods=['POST', 'OPTIONS'], headers='Content-Type')
 #@requires_api_key
 def post():

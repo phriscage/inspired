@@ -110,7 +110,7 @@ class UsersApiTestCase(unittest.TestCase):
             'first_name': first_name,
             'last_name': last_name
         }
-        response = self.client.post('/api/v1/users/', data=json.dumps(args), 
+        response = self.client.post('/api/v1/users', data=json.dumps(args), 
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 201)
@@ -141,7 +141,7 @@ class UsersApiTestCase(unittest.TestCase):
             'last_name': last_name
         }
         for id, values in enumerate([args, args2], 1):
-            response = self.client.post('/api/v1/users/', 
+            response = self.client.post('/api/v1/users', 
                 data=json.dumps(values), 
                 content_type='application/json')
             self.assertEquals(response.headers['Content-Type'], 
@@ -174,7 +174,7 @@ class UsersApiTestCase(unittest.TestCase):
             'last_name': last_name
         }
         for id, values in enumerate([args, args2], 1):
-            response = self.client.post('/api/v1/users/', 
+            response = self.client.post('/api/v1/users', 
                 data=json.dumps(values), 
                 content_type='application/json')
             self.assertEquals(response.headers['Content-Type'], 

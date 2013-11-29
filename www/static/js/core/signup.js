@@ -17,7 +17,7 @@
         $.ajax({
           type: 'POST',
           crossDomain: true,
-          url: api_url + '/api/v1/users/',
+          url: api_url + '/api/v1/users',
           data: JSON.stringify(data),
           contentType: 'application/json',
           success: function (response, status, xhr) {

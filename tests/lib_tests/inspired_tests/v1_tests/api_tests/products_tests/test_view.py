@@ -119,7 +119,7 @@ class ProductsApiTestCase(unittest.TestCase):
                 'id': self.product_style.id,
             }
         }
-        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+        response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 201)
@@ -138,7 +138,7 @@ class ProductsApiTestCase(unittest.TestCase):
                 'id': self.product_style.id,
             }
         }
-        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+        response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 400)
@@ -158,7 +158,7 @@ class ProductsApiTestCase(unittest.TestCase):
                 'id': self.product_type.id,
             }
         }
-        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+        response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 400)
@@ -182,7 +182,7 @@ class ProductsApiTestCase(unittest.TestCase):
                 'id': self.product_style.id,
             }
         }
-        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+        response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 404)
@@ -206,7 +206,7 @@ class ProductsApiTestCase(unittest.TestCase):
                 'id': id
             }
         }
-        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+        response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertEquals(response.status_code, 404)
@@ -242,7 +242,7 @@ class ProductsApiTestCase(unittest.TestCase):
             }
         }
         for id, values in enumerate([args, args2], 1):
-            response = self.client.post('/api/v1/products/', 
+            response = self.client.post('/api/v1/products', 
                 data=json.dumps(values), 
                 content_type='application/json')
             self.assertEquals(response.headers['Content-Type'], 
@@ -279,7 +279,7 @@ class ProductsApiTestCase(unittest.TestCase):
             }
         }
         for id, values in enumerate([args, args2], 1):
-            response = self.client.post('/api/v1/products/', 
+            response = self.client.post('/api/v1/products', 
                 data=json.dumps(values), 
                 content_type='application/json')
             self.assertEquals(response.headers['Content-Type'], 

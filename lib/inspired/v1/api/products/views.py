@@ -20,7 +20,7 @@ import json
 products = Blueprint('products', __name__)
 
 #create routes
-@products.route('/', methods=['POST', 'OPTIONS'])
+@products.route('', methods=['POST', 'OPTIONS'])
 @crossdomain(origin="*", methods=['POST', 'OPTIONS'], headers='Content-Type')
 #@requires_api_key
 def post():
