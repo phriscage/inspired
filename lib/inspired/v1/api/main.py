@@ -33,7 +33,7 @@ def create_app(uri):
     @app.errorhandler(500)
     def default_error_handle(error=None):
         """ handle all errors with json output """
-        return jsonify(error=error.code, message=error.message, success=False),\
+        return jsonify(error=error.code, message=str(error), success=False),\
             error.code
 
     ## add each api Blueprint and create the base route

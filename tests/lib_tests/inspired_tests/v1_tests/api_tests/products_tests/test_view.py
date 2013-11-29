@@ -51,11 +51,6 @@ class ProductsApiTestCase(unittest.TestCase):
         cls.db_session = db_session
         Base.query = cls.db_session.query_property()
         Base.metadata.create_all(cls.engine)
-        cls.product_type = RefProductType(name='abc')
-        cls.product_style = RefProductStyle(name='abc')
-        cls.db_session.add(cls.product_type)
-        cls.db_session.add(cls.product_style)
-        cls.db_session.commit()
 
     @classmethod
     def tearDownClass(cls):
@@ -68,6 +63,11 @@ class ProductsApiTestCase(unittest.TestCase):
         self._ctx = self.app.test_request_context()
         self._ctx.push()
         self.db_session.begin(subtransactions=True)
+        self.product_type = RefProductType(name='abc')
+        self.product_style = RefProductStyle(name='abc')
+        self.db_session.add(self.product_type)
+        self.db_session.add(self.product_style)
+        self.db_session.commit()
 
     def tearDown(self):
         """ use subsessions and do a rollback after each test. """
@@ -88,6 +88,8 @@ class ProductsApiTestCase(unittest.TestCase):
         args = {
             'upc': upc,
             'name': name,
+            'product_type': self.product_type,
+            'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
@@ -125,6 +127,94 @@ class ProductsApiTestCase(unittest.TestCase):
         self.assertEquals(json.loads(response.data)['data']['id'], 1)
 
 
+    def test_add_one_product_with_out_product_type_attribute(self):
+        """ testing adding a product with out product_type attribute """
+        upc = 'abc'
+        name = 'abc'
+        args = {
+            'upc': upc,
+            'name': name,
+            'product_style': {
+                'id': self.product_style.id,
+            }
+        }
+        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+            content_type='application/json')
+        self.assertEquals(response.headers['Content-Type'], 'application/json')
+        self.assertEquals(response.status_code, 400)
+        self.assertFalse(json.loads(response.data)['success'])
+        self.assertEquals(json.loads(response.data)['message'], 
+            "400: Bad Request")
+
+
+    def test_add_one_product_with_out_product_style_attribute(self):
+        """ testing adding a product with out product_style attribute """
+        upc = 'abc'
+        name = 'abc'
+        args = {
+            'upc': upc,
+            'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            }
+        }
+        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+            content_type='application/json')
+        self.assertEquals(response.headers['Content-Type'], 'application/json')
+        self.assertEquals(response.status_code, 400)
+        self.assertFalse(json.loads(response.data)['success'])
+        self.assertEquals(json.loads(response.data)['message'], 
+            "400: Bad Request")
+
+
+    def test_add_one_product_with_missing_product_type(self):
+        """ testing adding a product with missing product_type """
+        upc = 'abc'
+        name = 'abc'
+        id = 9999
+        args = {
+            'upc': upc,
+            'name': name,
+            'product_type': {
+                'id': id,
+            },
+            'product_style': {
+                'id': self.product_style.id,
+            }
+        }
+        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+            content_type='application/json')
+        self.assertEquals(response.headers['Content-Type'], 'application/json')
+        self.assertEquals(response.status_code, 404)
+        self.assertFalse(json.loads(response.data)['success'])
+        self.assertEquals(json.loads(response.data)['message'], 
+            "Product Type '%i' Not Found" % id)
+
+
+    def test_add_one_product_with_missing_product_style(self):
+        """ testing adding a product with missing product_style """
+        upc = 'abc'
+        name = 'abc'
+        id = 9999 
+        args = {
+            'upc': upc,
+            'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            },
+            'product_style': {
+                'id': id
+            }
+        }
+        response = self.client.post('/api/v1/products/', data=json.dumps(args),
+            content_type='application/json')
+        self.assertEquals(response.headers['Content-Type'], 'application/json')
+        self.assertEquals(response.status_code, 404)
+        self.assertFalse(json.loads(response.data)['success'])
+        self.assertEquals(json.loads(response.data)['message'], 
+            "Product Style '%i' Not Found" % id)
+
+
     def test_add_two_products(self):
         """ testing adding two products """
         upc = 'abc'
@@ -132,12 +222,24 @@ class ProductsApiTestCase(unittest.TestCase):
         args = {
             'upc': upc,
             'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            },
+            'product_style': {
+                'id': self.product_style.id,
+            }
         }
-        upc = 'xyz.com'
-        name = 'abc'
+        upc = 'xyz'
+        name = 'xyz'
         args2 = {
             'upc': upc,
             'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            },
+            'product_style': {
+                'id': self.product_style.id,
+            }
         }
         for id, values in enumerate([args, args2], 1):
             response = self.client.post('/api/v1/products/', 
@@ -151,18 +253,30 @@ class ProductsApiTestCase(unittest.TestCase):
 
 
     def test_add_two_products_same_upc(self):
-        """ testing adding two products """
+        """ testing adding two products with same upc """
         upc = 'abc'
         name = 'abc'
         args = {
             'upc': upc,
             'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            },
+            'product_style': {
+                'id': self.product_style.id,
+            }
         }
         upc = 'abc'
         name = 'abc'
         args2 = {
             'upc': upc,
             'name': name,
+            'product_type': {
+                'id': self.product_type.id,
+            },
+            'product_style': {
+                'id': self.product_style.id,
+            }
         }
         for id, values in enumerate([args, args2], 1):
             response = self.client.post('/api/v1/products/', 
@@ -173,9 +287,10 @@ class ProductsApiTestCase(unittest.TestCase):
             if id == 1:
                 self.assertEquals(response.status_code, 201)
                 self.assertEquals(json.loads(response.data)['data']['id'], id)
+                self.assertTrue(json.loads(response.data)['success'])
             else:
                 self.assertEquals(response.status_code, 409)
-            self.assertTrue(json.loads(response.data)['success'])
+                self.assertFalse(json.loads(response.data)['success'])
 
 
 if __name__ == "__main__":

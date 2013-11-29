@@ -66,7 +66,7 @@ def post():
                 abort(400)
     try:
         product = Product.query.filter(Product.upc==request.json['upc']).one()
-        return jsonify(message='Conflict', success=True), 409
+        return jsonify(message='Conflict', success=False), 409
     except NoResultFound as error:
         pass
     try:
@@ -75,14 +75,14 @@ def post():
         del(request.json['product_type'])
     except NoResultFound as error:
         return jsonify(message="Product Type '%s' Not Found" % 
-            request.json['product_type']['id'], success=True), 404
+            request.json['product_type']['id'], success=False), 404
     try:
         product_style = RefProductStyle.query.filter(
             RefProductStyle.id==request.json['product_style']['id']).one()
         del(request.json['product_style'])
     except NoResultFound as error:
         return jsonify(message="Product Style '%s' Not Found" % 
-            request.json['product_style']['id'], success=True), 404
+            request.json['product_style']['id'], success=False), 404
     product = Product(product_type=product_type, product_style=product_style, 
         **request.json)
     db_session.add(product)
