@@ -22,12 +22,9 @@ import datetime
 def upgrade():
     #Base.metadata.bind = op.get_bind()
     now = datetime.datetime.now()
-    op.execute(RefProductType.__table__.insert().values(name='original', 
-        created_at=now, updated_at=now))
-    op.execute(RefProductType.__table__.insert().values(name='low_end', 
-        created_at=now, updated_at=now))
-    op.execute(RefProductType.__table__.insert().values(name='high_end', 
-        created_at=now, updated_at=now))
+    for type in ['shirt', 'jeans', 'dress', 'jacket', 'show']:
+        op.execute(RefProductType.__table__.insert().values(name=type,
+            created_at=now, updated_at=now))
 
 def downgrade():
     op.execute("TRUNCATE %s" % RefProductType.__table__)

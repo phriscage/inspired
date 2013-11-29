@@ -22,7 +22,7 @@ import datetime
 def upgrade():
     #Base.metadata.bind = op.get_bind()
     now = datetime.datetime.now()
-    for style in ['shirt', 'jeans', 'dress', 'jacket', 'show']:
+    for style in ['original', 'low_end', 'high_end']:
         op.execute(RefProductStyle.__table__.insert().values(name=style,
             created_at=now, updated_at=now))
 
