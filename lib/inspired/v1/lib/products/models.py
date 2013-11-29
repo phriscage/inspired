@@ -43,12 +43,15 @@ class Product(Base):
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name, upc, product_type, product_style, image_url=None):
+    def __init__(self, name, upc, product_type, product_style, image_url=None, 
+        ref_product_type_id=None, ref_product_style_id=None):
         self.name = name
         self.upc = upc
         self.product_type = product_type
         self.product_style = product_style
         self.image_url = image_url
+        self.ref_product_type_id = ref_product_type_id
+        self.ref_product_style_id = ref_product_style_id
 
     #def __repr__(self):
         #return '<User %r>' % (self.name)

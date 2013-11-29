@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import db_session
 ## need to import all child models for now
 from inspired.v1.lib.products.models import Product
+from inspired.v1.lib.ref_product_types.models import RefProductType
+from inspired.v1.lib.ref_product_styles.models import RefProductStyle
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -31,9 +33,14 @@ def post():
        POST /products/create HTTP/1.1
        Accept: application/json
         data = {
-            'email_address': 'abc.com',
-            'first_name': 'Joe',
-            'last_name': 'Schome'
+            'name': 'abc',
+            'upc': '123',
+            'product_type': {
+                'id': 1,
+            }
+            'product_style': {
+                'id': 2,
+            }
         }
 
     **Example response:**
@@ -51,19 +58,37 @@ def post():
     """
     if not request.json:
         abort(400)
-    for var in ['name', 'upc', 'ref_product_type_id', 'ref_product_style_id']:
+    for var in ['name', 'upc', 'product_type', 'product_style']:
         if var not in request.json:
             abort(400)
+        if var in ['product_type', 'product_style']:
+            if 'id' not in request.json[var]:
+                abort(400)
     try:
         product = Product.query.filter(Product.upc==request.json['upc']).one()
         return jsonify(message='Conflict', success=True), 409
     except NoResultFound as error:
         pass
-    product = Product(**request.json)
+    try:
+        product_type = RefProductType.query.filter(
+            RefProductType.id==request.json['product_type']['id']).one()
+        del(request.json['product_type'])
+    except NoResultFound as error:
+        return jsonify(message="Product Type '%s' Not Found" % 
+            request.json['product_type']['id'], success=True), 404
+    try:
+        product_style = RefProductStyle.query.filter(
+            RefProductStyle.id==request.json['product_style']['id']).one()
+        del(request.json['product_style'])
+    except NoResultFound as error:
+        return jsonify(message="Product Style '%s' Not Found" % 
+            request.json['product_style']['id'], success=True), 404
+    product = Product(product_type=product_type, product_style=product_style, 
+        **request.json)
     db_session.add(product)
     db_session.commit()
     message = 'Created: %s' % product.upc
-    data = dict(id=product.id, upc=upc)
+    data = dict(id=product.id, upc=product.upc)
     return jsonify(message=message, data=data, success=True), 201
     
 
