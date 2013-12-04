@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import sys
 import os
+import uuid
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../../../../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import Base
@@ -45,6 +46,7 @@ class User(Base):
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name
+        self.set_api_key()
 
     def set_password(self, password):
         """ set the password using werkzeug generate_password_hash """
@@ -60,6 +62,10 @@ class User(Base):
         """
         return True
 
+    def set_api_key(self):
+        """ set the api_key based on the host ID and current time """
+        self.api_key = str(uuid.uuid1())
+   
     def is_active(self):
         """ method should return True for users unless they are inactive, for 
             example because they have been banned.
