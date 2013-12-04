@@ -60,9 +60,12 @@ $(document).ready(function(){
 		}
 	});	
 
-	$("#facebook-connect-btn").on(click, function(){ 
-		window.location = 'music.html';
-	});    	
+    /**
+    * Handle redirect for Facebook login
+    */
+    $("#facebook-connect-btn").on(click, function(e){
+        window.location.href = '/auth/login/facebook';
+    });
 
 	$("#email-reg-btn").on(click, function(){ 
 		$(".email-login-container").fadeIn(50);

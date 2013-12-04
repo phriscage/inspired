@@ -19,7 +19,7 @@
             console.log("Success!!");
             console.log(response.data);
             console.log(xhr.status);
-            if (xhr.status === 200 && response.code == 302) {
+            if (xhr.status === 200 && response.url) {
                 // response.redirect contains the string URL to redirect to
                 window.location.href = response.url;
             } else {

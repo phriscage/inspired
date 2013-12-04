@@ -5,14 +5,16 @@ UI bootstrap file
 import sys
 import os
 import argparse
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify, g, session
 from flask.ext.login import LoginManager, current_user
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
 
-from inspired_config import SQLALCHEMY_DATABASE_URI
+from inspired_config import SQLALCHEMY_DATABASE_URI, FACEBOOK_APP_ID, \
+    FACEBOOK_APP_SECRET
 from database import init_engine, db_session
+from flask_oauthlib.client import OAuth
 
 login_manager = LoginManager()
 
@@ -22,6 +24,22 @@ from inspired.v1.lib.users.models import User
 def load_user(userid):
     return User.query.get(int(userid))
 
+oauth = OAuth()
+facebook = oauth.remote_app(
+    'facebook',
+    consumer_key=FACEBOOK_APP_ID,
+    consumer_secret=FACEBOOK_APP_SECRET,
+    request_token_params={'scope': 'email'},
+    base_url='https://graph.facebook.com',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    app_key='FACEBOOK'
+)
+
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('oauth_token')
 
 def create_app(uri):
     """ dynamically create the app """
@@ -32,6 +50,7 @@ def create_app(uri):
     app.secret_key = ('\xda\xe0\xff\xc8`\x99\x93e\xd0\xb9\x0e\xc9\xde\x84?q'
         '\x9e\x19\xc0\xa1\xa7\xfb\xd0\xde')
     login_manager.init_app(app)
+    oauth.init_app(app)
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):

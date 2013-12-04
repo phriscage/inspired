@@ -36,16 +36,19 @@ class User(Base):
     last_name = Column(String(120))
     password = Column(String(120))
     api_key = Column(String(40))
+    facebook_id = Column(String(120))
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, email_address, password, user_name=None, first_name=None,
-        last_name=None):
+    def __init__(self, email_address, password=None, user_name=None,
+        first_name=None, last_name=None, facebook_id=None):
         self.email_address = email_address
-        self.set_password(password)
+        if password:
+            self.set_password(password)
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name
+        self.facebook_id = facebook_id
         self.set_api_key()
 
     def set_password(self, password):
@@ -54,6 +57,8 @@ class User(Base):
    
     def check_password(self, password):
         """ check the password using werkzeug check_password_hash """
+        if not self.password:
+            return None
         return check_password_hash(self.password, password)
 
     def is_authenticated(self):
