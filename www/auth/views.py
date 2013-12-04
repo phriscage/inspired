@@ -61,6 +61,8 @@ def logout():
 @auth.route('/login/facebook')
 def login_facebook():
     """ testing the facebook login """
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('user.settings', user_id=g.user.id))
     return facebook.authorize(callback=url_for('auth.login_facebook_authorized',
         next=request.args.get('next') or request.referrer or None,
         _external=True))
@@ -79,14 +81,24 @@ def login_facebook_authorized(resp):
         print resp
     if 'oauth_token' in session:
         me = facebook.get('/me')
-        print me.data
+        #print me.data
         try:
             user = User.query.filter(User.email_address == \
                 me.data['email']).one()
+            if not user.facebook_id or not user.first_name or \
+                not user.last_name:
+                if not user.facebook_id:
+                    user.facebook_id =  me.data['id']
+                if not user.first_name:
+                    user.first_name =  me.data['first_name']
+                if not user.last_name:
+                    user.last_name =  me.data['last_name']
+                db_session.commit()
+            #print "User already exists."
+            #return redirect(url_for('auth.login'))
         except NoResultFound as error:
             fb_data = { 
                 'email_address': me.data['email'],
-                'user_name': me.data['name'],
                 'first_name': me.data['first_name'],
                 'last_name': me.data['last_name'],
                 'facebook_id': me.data['id']
