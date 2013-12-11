@@ -8,10 +8,41 @@
 
 {% block content %}
 
-    <div class="row landing-container-wrapper">
-        <div class="landing-button-group small-10 large-5 columns">
-            <h4>Hello! {{ user_id }}</h4>
+<form>
+  <div class="row">
+    <div class="twelve columns" style="border-bottom: 1px solid #2c3b4c; padding:0;">
+      <div class="row profile-group">
+        <div class="profile-email-label small-5 columns">Email Address</div>
+        <div class="profile-email-field small-7 columns">email@email.com</div>
+      </div>
+
+      <div class="row profile-group">
+        <div class="profile-pass-label small-5 columns">Password</div>
+        <a class="profile-pass-field small-7 columns">Change My Password</a>
+        <div class="small-7 columns password-field">
+          <input type="password" id="old-password-field" placeholder="Old Password" >
+          <input type="password" id="new-password-field" placeholder="New Password" >
+          <button>Change Pasword</button>
         </div>
-    </div>             
+      </div>
+    </div>
+  </div>
+</form>
+<form>
+  <div class="row">
+    <div class="twelve columns" style="border-bottom: 1px solid #2c3b4c; padding:0;">
+      <div class="row profile-group">
+        <div class="profile-facebook-label small-5 columns">Facebook</div>
+        <div class="profile-facebook-field small-7 columns">
+          <button>Connect Facebook</button>
+          <div class="profile-facebook-details">
+            Connected as: <span>'Account-Name'</span>
+            <a>Disconnect</a>
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
+</form>
 
 {% endblock %}

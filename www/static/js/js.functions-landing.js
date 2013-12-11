@@ -2,15 +2,31 @@ var screenWidth = $(window).width();
 var screenHeight = $(window).height();
 
 $(document).ready(function(){
-//Common
+	// Check if a new cache is available on page load. Swap it in and reload the page to get the new hotness.
+	window.addEventListener('load', function(e) {
+	  window.applicationCache.addEventListener('updateready', function(e) {
+	    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+	      // Browser downloaded a new app cache. Swap it in and reload the page to get the new hotness.
+	      window.applicationCache.swapCache();
+	      window.location.reload();
+	    } 
+	  }, false);
+	}, false);	
+
 	$(document).foundation(); 
 
     //force bookmark on iOS
-    if (("standalone" in window.navigator) && !window.navigator.standalone && navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
+    if (("standalone" in window.navigator) && !window.navigator.standalone && navigator.userAgent.match(/(iPod|iPhone)/i)){
         $('.landing-button-group, .landing-footer').hide();
         $('body').append('<div class="landing-footer-message">Tap "<b style="letter-spacing: -1px">Add to Home Screen</b>" to install</br><span>&#8595;</span></div>');
     } 
-
+    if (("standalone" in window.navigator) && !window.navigator.standalone && navigator.userAgent.match(/(iPad)/i)){
+        $('.landing-button-group, .landing-footer').hide();
+        $('body').append('<div class="landing-footer-message ipad"><span>&#8593;</span></br>Tap <div class="safari-share-icon"></div> and then "<b style="letter-spacing: -1px">Add to Home Screen</b>" to install</div>');
+    }
+    if (navigator.userAgent.match(/(Android)/i)){
+        $('body').append('<div class="landing-footer-message android"><span>&#8593;</span></br>Tap<div class="android-settings-icon"></div>and then "<b style="letter-spacing: -1px">Add to home screen</b>" to install</div>');
+    }    
     //remove scroling: https://gist.github.com/amolk/1599412
     document.body.addEventListener('touchmove', function(event) {
       event.preventDefault();
@@ -37,18 +53,9 @@ $(document).ready(function(){
     $(".landing-container, .landing-container-wrapper").css('height', screenHeight);
 
 	window.onload = function(){
-	  backgroundChange();
-	  $(".landing-container-wrapper, .landing-button").fadeIn(500);
-	  $(".footer").fadeIn(100);
-	  $(".app-name, .subheading").css("color","#fff");
+	  $(".landing-container-wrapper, .landing-button").fadeIn(100);
+	  $(".footer").fadeIn(300);
 	};
-
-	//change background image
-	var totalCount = 5;
-	function backgroundChange() {
-		var num = Math.ceil( Math.random() * totalCount );
-		$(".landing-container").css('background','url(../static/img/landing-poster/'+num+'.png) no-repeat center center fixed').css('background-size','cover');
-	}
 
 	var heightDiv = $("#intro-info p").height();
 	$('#intro-info').addClass('animated fadeInDownBig').css('top',screenHeight-heightDiv-220);
@@ -60,29 +67,30 @@ $(document).ready(function(){
 		}
 	});	
 
-    /**
-    * Handle redirect for Facebook login
-    */
-    $("#facebook-connect-btn").on(click, function(e){
-        window.location.href = '/auth/login/facebook';
-    });
+	$("#facebook-connect-btn").on(click, function(){ 
+		window.location = '/auth/login/facebook';
+	});    	
 
-	$("#email-reg-btn").on(click, function(){ 
+	$("#email-reg-btn").on(click, function(e){ 
+		e.preventDefault();	
 		$(".email-login-container").fadeIn(50);
 		$("#facebook-connect-btn, #email-reg-btn").hide();
 	});    
 
-	$(".reset-passwd").on(click, function(){ 
+	$(".reset-passwd").on(click, function(e){ 
+		e.preventDefault();	
 		$(".email-login-container").hide();
 		$(".email-reset-passwd-container").fadeIn(200);
 	});	
 
-	$("#back-login").on(click, function(){ 
+	$("#back-login").on(click, function(e){ 
+		e.preventDefault();	
 		$(".email-login-container").hide();
 		$("#facebook-connect-btn, #email-reg-btn").fadeIn(200);
 	});
 
-	$("#back-reset-passwd").on(click, function(){ 
+	$("#back-reset-passwd").on(click, function(e){ 
+		e.preventDefault();	
 		$(".email-reset-passwd-container").hide();
 		$(".email-login-container").fadeIn(200);
 	});	

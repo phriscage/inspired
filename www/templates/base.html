@@ -1,50 +1,48 @@
 <html>
-    <body>
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable = no" />
-            <meta name="apple-mobile-web-app-capable" content="yes" />
-            <meta name="apple-mobile-web-app-status-bar-style" content="black">
-            <meta name="mobile-web-app-capable" content="yes">
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable = no" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="mobile-web-app-capable" content="yes">
 
-            <!-- Icon -->
-            <link rel="apple-touch-icon" 
-                href="{{ url_for('static', filename='img/icons/icon-76.png') }}" />
-            <link rel="apple-touch-icon" sizes="76x76" 
-                href="{{ url_for('static', filename='img/icons/icon-76.png') }}" />
-            <link rel="apple-touch-icon" sizes="120x120" 
-                href="{{ url_for('static', filename='img/icons/icon-120.png') }}" />
-            <link rel="apple-touch-icon" sizes="152x152"  
-                href="{{ url_for('static', filename='img/icons/icon-152.png') }}" />
-            <link rel="shortcut icon" sizes="196x196" 
-                href="{{ url_for('static', filename='img/icons/icon-196.png') }}">
-            <title>{% block title %}Inspired{% endblock %}</title>
+      <meta name="description" content="Shop styles from the hottest music videos. Inspired is the destination to keep up with your favorite celebrity fashion trends." />
+      <meta name="keywords" content="celebrity clothing, fashionable clothing, fashionable clothes, clothing, clothes, clothing store, clothes stores, women clothes stores, online clothes store, female clothing stores, clothing store online, celebrity fashion for cheap, cheap celebrity fashion, cheap fashion, cheap dresses, cheap dresses online, celebrity fashion cheap , trendy clothes, trendy clothing, trendy womens clothes, trendy dresses, shopping app, apple shopping app, shopping site, iPhone shopping apps, shopping app clothes, fashion shopping app, shop smartphone apps, fashion style apps, style advice app, style inspiration app, shop by celebrity, celebrity shopping app, celebrities fashion looks, style inspiration site, celebrity fashion, celebrity inspired style ideas, free app, pop music videos app, urban music app" />
+      <meta name="author" content="inspiredapp.tv" />
 
-            {% block css %}
-            <link rel="stylesheet" type="text/css"
-                href="{{ url_for('static', filename='css/foundation.css') }}" />
-            {% endblock %}
+      <meta property="og:type" content="website"/>
+      <meta property="og:url" content="http://www.inspiredapp.tv"/>
+      <meta property="og:site_name" content="Inspired"/>
+      <meta property="og:title" content="Inspired">
+      <meta property="og:description" content="Shop styles from the hottest music videos. Inspired is the destination to keep up with your favorite celebrity fashion trends." />
+      <meta property="og:image" content="{{ url_for('static', filename='img/icons/icon-196.png') }}" />
 
-        </head>
+      <link rel="canonical" href="http://www.inspiredapp.tv/">
+      <link rel="publisher" href="https://plus.google.com/102711944033891399361"/>
+        <!-- Icon -->
+        <link rel="apple-touch-icon" 
+            href="{{ url_for('static', filename='img/icons/icon-76.png') }}" />
+        <link rel="apple-touch-icon" sizes="76x76" 
+            href="{{ url_for('static', filename='img/icons/icon-76.png') }}" />
+        <link rel="apple-touch-icon" sizes="120x120" 
+            href="{{ url_for('static', filename='img/icons/icon-120.png') }}" />
+        <link rel="apple-touch-icon" sizes="152x152"  
+            href="{{ url_for('static', filename='img/icons/icon-152.png') }}" />
+        <link rel="shortcut icon" sizes="196x196" 
+            href="{{ url_for('static', filename='img/icons/icon-196.png') }}">
+        <title>{% block title %}Inspired{% endblock %}</title>
 
+        {% block css %}
+        <link rel="stylesheet" type="text/css"
+            href="{{ url_for('static', filename='css/foundation.css') }}" />
+        {% endblock %}
+
+    </head>
+    <body style="overflow: hidden;">
         {% include "header.html" %}
-
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
-
-        <div id="content-wrapper">
-            <div id="content" class="container">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
+        {% block content %}
+        {% endblock %}
 
         {% include "footer.html" %}
 

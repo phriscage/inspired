@@ -9,6 +9,39 @@
 
 {% block content %}
 
+<body style="overflow: hidden;">
+    <div class="landing-container">
+      <div class="landing-top-bar">Private Alpha</div>
+      <div class="app-name">Inspired</div>
+      <h2 class="subheading">
+        Shop styles from the hottest music videos
+      </h2>
+      <ul class="poster-slideshow">
+          <li><span>Image_1</span></li>
+          <li><span>Image_2</span></li>
+          <li><span>Image_3</span></li>
+          <li><span>Image_4</span></li>
+          <li><span>Image_5</span></li>
+          <li><span>Image_6</span></li>
+      </ul>
+    </div>
+
+    <div data-alert class="alert-box secondary" id="intro-info" style="z-index: 999999;display:none" data-alert="">
+      <h4>Private Alpha Access:</h4>
+        <p>We opened limited early access to our beta version. Please keep in mind this is an unfinished product and some glitches might sliped through.</p>
+        <p>Support our mission by exploring the app and sending us your suggestions!</p>
+      <div class="row">
+        <div class="small-12 large-5 small-centered large-centered columns">
+          <input id="invite-code-form" type="text" placeholder="Invite Code">
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-3 large-1 small-centered large-centered columns">
+          <button class="small button" id="invite-code-button">OK</button>
+        </div>
+      </div>
+    </div>
+
     <div class="row landing-container-wrapper">
       <div class="landing-button-group small-10 large-5 columns">
         <button class="landing-button" id="email-reg-btn">Manual Email Login</button>
@@ -26,5 +59,6 @@
         <button id="get-inspired-button">Get Inspired</button>
       </form>
     </div>    
+</body>
 
 {% endblock %}

@@ -2,34 +2,41 @@ var screenWidth = $(window).width();
 var screenHeight = $(window).height();
 
 $(document).ready(function(){
+	// Check if a new cache is available on page load. Swap it in and reload the page to get the new hotness.
+	window.addEventListener('load', function(e) {
+	  window.applicationCache.addEventListener('updateready', function(e) {
+	    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+	      // Browser downloaded a new app cache. Swap it in and reload the page to get the new hotness.
+	      window.applicationCache.swapCache();
+	      window.location.reload();
+	    } 
+	  }, false);
+	}, false);
+
 	$(document).foundation(); 
 	//Define Click Event for Mobile
-	if( 'ontouchstart' in window ){ var click = 'touchstart'; }
-		else { var click = 'click'; }	
+	if( 'ontouchstart' in window ){ 
+		var click = 'singleTap'; 
+	}else{ 
+		var click = 'click';
+	}	
 
     $("#spinner").css('top', screenHeight/2+10);
 
 	window.onload = function(){
 	  $(".spinner-wrap").fadeOut(50);
 	  $(".footer").fadeIn(100);
-	};
-
-	//fastclick: https://github.com/ftlabs/fastclick
-	window.addEventListener('load', function() {
-	    FastClick.attach(document.body);
-	}, false);
-	$(function() {
-	    FastClick.attach(document.body);
-	});    	
+	};  	
 
 /*FOOTER BUTTONS*/
   //Settings MENU
 	/*	Reveal Menu */
 	$('.footer-settings').on(click, function(e){
- event.stopImmediatePropagation();
- event.preventDefault();		
+		e.stopImmediatePropagation();
+		e.preventDefault();	
 		if( !$('.content').hasClass('inactive') ){				
 			// Slide and scale content		
+			$('.footer').hide();
 			$('.content, .settings-menu').addClass('inactive');
 			setTimeout(function(){ $('.content').addClass('flag'); }, 100);
 			
@@ -59,12 +66,12 @@ $(document).ready(function(){
 			$(this).toggleClass('active').fadeIn(300);
 		});
 
-		$(".fx-container").css("width", screenWidth);			
+		// $(".fx-container").css("width", screenWidth);			
 		
 		// Reset menu
 		setTimeout(function(){
 			$('li').removeClass('visible');
-			$('.footer').show();
+			$('.footer').fadeIn(100);
 		}, 300);
 	}
 	
@@ -85,7 +92,7 @@ $(document).ready(function(){
 	});	
 	$('.my-profile').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/my-profile.html",
+	      url:"/static/templates/settings/my-profile.html",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -97,7 +104,7 @@ $(document).ready(function(){
 	});	
 	$('.email-preferences').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/email-preferences.html",
+	      url:"/static/templates/settings/email-preferences.html",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -156,9 +163,8 @@ $(document).ready(function(){
 	   $('.settings-back-back').show();
 	});
   //END Settings MENU
-
   //Bookmark & Following buttons
-    $('.footer-btn').on(click, function(e){
+    $('a.footer-btn').on(click, function(e){
         e.preventDefault();
         var position = $('#footer-container').position();
         if ($(this).hasClass('footer-bookmarks')){
@@ -216,16 +222,87 @@ $(document).ready(function(){
 	});
 
 //Product Screen
-	$("#bookmark-item-btn").on(click,function(){
+	$("#bookmark-item-btn").on(click,function(e){
+		e.preventDefault();			
 	  $(this).toggleClass('selected');
 	});
 
-    $(".maximize-btn").on(click, function(){ 
+    $(".maximize-btn").on(click, function(e){ 
+		e.stopImmediatePropagation();
     	$(".clearing-featured-img img").click(); 
     }); 
 
-    $(".retailer-btn").on(click, function(e){ 
-    	e.preventDefault();
-    	$('#iframe-test').load($(this).attr('href'));
-    });     
+//Retailer Button
+    $(".retailer-btn").on(click, function(){ 
+	    var retailerUrl = $(".retailer-btn").attr("data-src");
+
+		if( 'ontouchstart' in window ){//touch device
+			var win=window.open(retailerUrl, '_blank');
+			win.focus();
+		}else{//non-touch device
+			$("#footer-container-iframe").attr("src",retailerUrl); 
+
+	    	$(".main-container").css('height',screenHeight);
+	    	$("#footer-container-iframe").css('height',screenHeight-88);
+	    	$("#footer-container-iframe").attr("seamless","yes");        	
+			$("#footer-container").css('overflow-y','hidden');    		
+	    	$("#footer-container").css('padding-left','0');
+	    	
+	    	$(".back-btn").hide();
+
+			$(".footer-btn, .footer-settings").fadeOut();
+			$(".footer-retailer-back, .footer-retailer-fwd").fadeIn();    		
+	    	$(".close-retailer-btn").show();
+	    	var retailerName = retailerUrl.replace("http://go.redirectingat.com?id=35687X941090&xs=1&url=http%3A%2F%2F","").replace("http://", "").replace("https://", "").split(/([\%\/])/);
+	    	$(".name").text(retailerName[0]).css("font-size","18px").attr('onclick', '');
+	    	
+			$('#footer-container').attr('class', '').addClass('move-up');
+			//define variable to store iframe history state
+			window.historyState = history.length;
+			window.originalHistoryState = history.length;
+			$(".footer-retailer-fwd").addClass('inactive');			
+		}
+    });
+
+	$(".footer-retailer-back").on(click, function(e){ 
+		e.preventDefault();
+		if ($(".footer-retailer-fwd").hasClass('inactive')){
+			window.historyState = history.length;
+		}
+		if (window.originalHistoryState == window.historyState){
+			 $("a.close-retailer-btn").trigger(click);
+		}else{
+			window.historyState--;
+			$(".footer-retailer-fwd").removeClass('inactive');
+			history.back();
+		}
+	});
+
+	$(".footer-retailer-fwd").on(click, function(e){ 
+		e.preventDefault();
+		if (history.length == window.historyState){
+			$(this).addClass('inactive');
+		}else{
+			window.historyState++;
+			if (history.length == window.historyState){
+				$(this).addClass('inactive');
+			}
+			history.forward();			
+		}
+	});	
+
+    $(".close-retailer-btn").on(click, function(e){
+		e.stopImmediatePropagation();
+		e.preventDefault();	
+    	$(".main-container").css('height','100%');
+    	$(".back-btn, .footer-btn, .footer-settings").fadeIn();
+    	$(".footer").css('bottom','0');
+    	$(".close-retailer-btn, .footer-retailer-back, .footer-retailer-fwd").hide();
+    	$(".name").text("Inspired").css("font-size","32px").fadeIn();
+    	$(".name").attr("onclick", "location.reload();location.href='../../../music.html'");  
+    	$("#footer-container").css('overflow-y','scroll');    		  	
+        $('#footer-container').attr('class', '').addClass('move-down');
+        $("#footer-container-iframe").attr('src','');
+        $(this).removeClass('selected');
+    });   
 });

@@ -1,14 +1,7 @@
-<div class="landing-container">
-  <div class="private-beta">Private Beta
+      <div class="landing-top-bar">Private Alpha</div>
         {% if g.user and g.user.is_authenticated() %} 
         | <a href="{{ url_for('auth.logout') }}">Logout</a>
         {% else %}
         | <a href="{{ url_for('auth.login') }}">Login</a>
         {% endif %}
-  </div>
-  <div class="app-name">Inspired</div>
-  <h2 class="subheading">
-    Shop styles from the hottest music videos
-  </h2>
-</div>
 
