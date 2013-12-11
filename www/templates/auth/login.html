@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 
-{% block javascript %}
-    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
-    <script src="{{ url_for('static', filename='js/auth/login.js') }}"></script>
-{% endblock %}
-
 {% block content %}
-
-<body style="overflow: hidden;">
     <div class="landing-container">
       <div class="landing-top-bar">Private Alpha</div>
       <div class="app-name">Inspired</div>
@@ -59,6 +50,8 @@
         <button id="get-inspired-button">Get Inspired</button>
       </form>
     </div>    
-</body>
 
+{% endblock %}
+{% block bottom_javascript %}
+    <script src="{{ url_for('static', filename='js/auth/login.js') }}"></script>
 {% endblock %}

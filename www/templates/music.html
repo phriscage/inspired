@@ -1,29 +1,10 @@
-<!DOCTYPE html>
-<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-	<meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable = no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <!-- Icon -->
-  <link rel="apple-touch-icon" href="../static/img/icons/icon-76.png" />
-  <link rel="apple-touch-icon" sizes="76x76" href="../static/img/icons/icon-76.png" />
-  <link rel="apple-touch-icon" sizes="120x120" href="../static/img/icons/icon-120.png" />
-  <link rel="apple-touch-icon" sizes="152x152" href="../static/img/icons/icon-152.png" />  
-  <link rel="shortcut icon" sizes="196x196" href="../static/img/icons/icon-196.png">
-  
-  <link rel="stylesheet" href="../static/css/foundation.css" />
-  <title>Inspired</title> 
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
   <div class="screen">
     <div class="settings-menu">
-      <a class="settings-back">Back</a>
-      <a class="settings-back-back">Back</a>
-      <a class="settings-logout" href="">Logout</a>
+      <a class="settings-back" href="javascript:;">Back</a>
+      <a class="settings-back-back" href="javascript:;">Back</a>
+      <a class="settings-logout" href="javascript:;">Logout</a>
       <div class="settings-title">Settings</div>      
       <ul class="settings-menu-list">
         <li class="my-profile">My Profile</li>
@@ -34,7 +15,7 @@
         <li class="legal">Legal</li>
       </ul>
       <div class="ajax-container"></div>
-      <div class="settings-footer">Inspired - v.0.1</br>Copyright Invidio, Inc 2013</div>  
+      <div class="settings-footer">Inspired [V-0.1]</br>&#169; Invidio, Inc 2013</div>  
     </div>   
     <div class="content">
       <nav class="top-bar">
@@ -44,8 +25,8 @@
       <div class="main-container">
         <!-- Image Slider -->
         <div class="row">
-          <div id='imageSlider' class='twelve columns featured-music-videos-container'>
-            <div class='featured-music-videos'>
+          <div class='twelve columns featured-music-videos-container'>
+            <div data-orbit class='featured-music-videos'>
               <div class="fx-container" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'">
                 <div class="shop-btn">Shop the look</div>
                 <img class="item" src="../static/img/music/featured/feat-1.png" />
@@ -66,54 +47,38 @@
         </div> 
        <!-- Artist List -->
         <div class="row artist-list">
-          <a href="../templates/artists/austin-mahone/artist.html" class="four columns artist-btn">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
             <img class="artist-img" src="../static/img/music/artists/austin-mahone/cover.png" />
             <div class="artist-name">Austin Mahone</div>
           </a>    
-          <a href="../templates/artists/avril-lavigne/artist.html" class="four columns artist-btn">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
             <img class="artist-img" src="../static/img/music/artists/avril-lavigne/cover.png" />
             <div class="artist-name">Avril Lavigne</div>
           </a>  
-          <a href="../templates/artists/danna-paola/artist.html" class="four columns artist-btn">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
             <img class="artist-img" src="../static/img/music/artists/danna-paola/cover.png" />
             <div class="artist-name">Danna Paola</div>
           </a>            
-          <a href="../templates/artists/demi-lovato/artist.html" class="four columns artist-btn">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
             <img class="artist-img" src="../static/img/music/artists/demi-lovato/cover.png" />
             <div class="artist-name">Demi Lovato</div>
           </a> 
-          <a href="../templates/artists/taylor-swift/artist.html" class="four columns artist-btn">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
             <img class="artist-img" src="../static/img/music/artists/taylor-swift/cover.png" />
             <div class="artist-name">Taylor Swift</div>
           </a>
         </div>  
       </div> 
-
-      <!--FOOTER-->
-      <div class="footer">
-        <a href="#" class="footer-settings"></a>
-        <a href="#" class="footer-bookmarks footer-btn">Bookmarks</a>
-        <a href="#" class="footer-following footer-btn">Following</a>
-      </div>
-      <div id="footer-container"><!-- Dynamic Content --></div>
+      <div id="footer-container"><!-- Dynamic Content --></div> 
     </div>  
   </div>
-
+   
 <!--SCRIPTS-->
-  
   <script>
     document.write('<script src='+('__proto__'in{}?'../static/js/vendor/zepto':'../static/js/vendor/jquery')+'.js><\/script>')
   </script>
-  <script src="../static/js/foundation.min.js"></script>
-  <script src="../static/js/js.functions.js"></script>
-  <script src='../static/js/swipe.js'></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
-  <script>
-      var elem = document.getElementById('imageSlider');
-      window.mySwipe = Swipe(elem,{auto: 4000, continuous: true});
-  </script>    
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-42670109-1', 'invid.io');ga('send', 'pageview');
-  </script>    
+  </script>  
 </body>
 </html>

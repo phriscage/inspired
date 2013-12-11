@@ -1,48 +1,11 @@
 {% extends "base.html" %}
 
-{% block javascript %}
-    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
-{% endblock %}
-
 {% block content %}
 
-<form>
-  <div class="row">
-    <div class="twelve columns" style="border-bottom: 1px solid #2c3b4c; padding:0;">
-      <div class="row profile-group">
-        <div class="profile-email-label small-5 columns">Email Address</div>
-        <div class="profile-email-field small-7 columns">email@email.com</div>
-      </div>
-
-      <div class="row profile-group">
-        <div class="profile-pass-label small-5 columns">Password</div>
-        <a class="profile-pass-field small-7 columns">Change My Password</a>
-        <div class="small-7 columns password-field">
-          <input type="password" id="old-password-field" placeholder="Old Password" >
-          <input type="password" id="new-password-field" placeholder="New Password" >
-          <button>Change Pasword</button>
+    <div class="row landing-container-wrapper">
+        <div class="landing-button-group small-10 large-5 columns">
+            <h4>Hello! {{ g.user.email_address }}</h4>
         </div>
-      </div>
     </div>
-  </div>
-</form>
-<form>
-  <div class="row">
-    <div class="twelve columns" style="border-bottom: 1px solid #2c3b4c; padding:0;">
-      <div class="row profile-group">
-        <div class="profile-facebook-label small-5 columns">Facebook</div>
-        <div class="profile-facebook-field small-7 columns">
-          <button>Connect Facebook</button>
-          <div class="profile-facebook-details">
-            Connected as: <span>'Account-Name'</span>
-            <a>Disconnect</a>
-          </div>
-        </div>
-      </div>      
-    </div>
-  </div>
-</form>
-
+    
 {% endblock %}
