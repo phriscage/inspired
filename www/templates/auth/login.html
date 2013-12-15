@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-
+{% block javascript %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
+{% endblock %}
+{% include "auth/header.html" %}
 {% block content %}
     <div class="landing-container">
       <div class="landing-top-bar">Private Alpha</div>

@@ -33,13 +33,11 @@ def login():
             db_session.commit()
             login_user(user)
             message = 'Created: %s' % user.email_address
-            return jsonify(url=url_for('user.settings', user_id=user.id), 
-                success=True)
+            return jsonify(url=url_for('core.get_music'), success=True)
         if user.check_password(request.json['password']):
             login_user(user)
             #flash("'%s' logged in successfully." % user.email_address)
-            return jsonify(url=url_for('user.settings', user_id=user.id), 
-                success=True)
+            return jsonify(url=url_for('core.get_music'), success=True)
         else:
             message = "Unknown email_address or password"
             print "Password incorrect"
@@ -47,29 +45,30 @@ def login():
         #return redirect(url_for('user.settings', user_id=user.id))
     else:
         if g.user is not None and g.user.is_authenticated():
-            return redirect(url_for('user.settings', user_id=g.user.id))
+            return redirect(url_for('core.get_music'))
         return render_template('auth/login.html')
 
-@auth.route('/logout')
-def logout():
+@auth.route('/logout', methods=['GET'])
+def get_logout():
     """ logout the user and redirect to home """
     logout_user()
     session.pop('logged_in', None)
     session.pop('facebook_token', None)
-    return redirect(url_for('core.index'))
+    return redirect(url_for('core.get_index'))
 
-@auth.route('/login/facebook')
-def login_facebook():
+@auth.route('/login/facebook', methods=['GET'])
+def get_login_facebook():
     """ testing the facebook login """
     if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('user.settings', user_id=g.user.id))
-    return facebook.authorize(callback=url_for('auth.login_facebook_authorized',
+        return redirect(url_for('core.get_music'))
+    return facebook.authorize(callback=url_for(
+        'auth.get_login_facebook_authorized',
         next=request.args.get('next') or request.referrer or None,
         _external=True))
 
-@auth.route('/login/facebook/authorized')
+@auth.route('/login/facebook/authorized', methods=['GET'])
 @facebook.authorized_handler
-def login_facebook_authorized(resp):
+def get_login_facebook_authorized(resp):
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
             request.args['error_reason'],
@@ -107,10 +106,10 @@ def login_facebook_authorized(resp):
             db_session.add(user)
             db_session.commit()
         login_user(user)
-        return redirect(url_for('user.settings', user_id=user.id))
+        return redirect(url_for('core.get_music'))
         #return "Logged in as '%s' redirect=%s" % \
             #(me.data, request.args.get('next'))
     else:
         print "No oauth_token"
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.get_login'))
 

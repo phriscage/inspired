@@ -92,7 +92,7 @@ $(document).ready(function(){
 	});	
 	$('.my-profile').on(click,function(){
 	   $.ajax({
-	      url:"/static/templates/settings/my-profile.html",
+	      url:"/user/settings/my-profile",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	});	
 	$('.email-preferences').on(click,function(){
 	   $.ajax({
-	      url:"/static/templates/settings/email-preferences.html",
+	      url:"/user/settings/email-preferences",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -116,7 +116,7 @@ $(document).ready(function(){
 	});		
 	$('.invite-friends').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/invite-friends.html",
+	      url:"/user/settings/invite-friends",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -128,7 +128,7 @@ $(document).ready(function(){
 	});
 	$('.send-feedback').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/send-feedback.html",
+	      url:"/user/settings/send-feedback",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -140,7 +140,7 @@ $(document).ready(function(){
 	});	
 	$('.help').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/help.html",
+	      url:"/user/settings/help",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);
@@ -152,7 +152,7 @@ $(document).ready(function(){
 	});	
 	$('.legal').on(click,function(){
 	   $.ajax({
-	      url:"../templates/settings/legal.html",
+	      url:"/user/settings/legal",
 	      dataType:'html',
 	      success:function(data) {
 	        $(".ajax-container").html(data);

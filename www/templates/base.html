@@ -45,12 +45,10 @@
         </script>
         <script src="{{ url_for('static', filename='includes/jquery/1.10.2/jquery-1.10.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
         <script src="{{ url_for('static', filename='js/fastclick.js') }}"></script>
         {% endblock %}
     </head>
     <body style="overflow: hidden;">
-        {% include "header.html" %}
         {% block content %}
         {% endblock %}
         {% if g.user and g.user.is_authenticated() %}

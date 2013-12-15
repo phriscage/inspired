@@ -1,18 +1,79 @@
 {% extends "base.html" %}
-
 {% block javascript %}
-    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/js.functions-landing.js') }}"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/foundation/foundation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation/foundation.orbit.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.functions.js') }}"></script>
 {% endblock %}
-
 {% block content %}
-
-    <div class="row landing-container-wrapper">
-        <div class="landing-button-group small-10 large-5 columns">
-            <h4>Hello! {{ g.user.email_address }}</h4>
-        </div>
-    </div>
-    
-
+  <div class="screen">
+    <div class="settings-menu">
+      <a class="settings-back" href="javascript:;">Back</a>
+      <a class="settings-back-back" href="javascript:;">Back</a>
+      <a class="settings-logout" href="{{ url_for('auth.get_logout') }}">Logout</a>
+      <div class="settings-title">Settings</div>      
+      <ul class="settings-menu-list">
+        <li class="my-profile">My Profile</li>
+        <li class="email-preferences">Email Preferences</li>
+        <li class="invite-friends">Invite Friends</li>
+        <li class="send-feedback">Send Feedback</li>
+        <li class="help">Help</li>
+        <li class="legal">Legal</li>
+      </ul>
+      <div class="ajax-container"></div>
+      <div class="settings-footer">Inspired [V-0.1]</br>&#169; Invidio, Inc 2013</div>  
+    </div>   
+    </div>   
+    <div class="content">
+      <div class="spinner-wrap"><div id="spinner"><img src="../static/img/spinner.gif"></div></div>
+      {% include "header/index.html" %}
+      <div class="main-container">
+        <!-- Image Slider -->
+        <div class="row">
+          <div class='twelve columns featured-music-videos-container'>
+            <div data-orbit class='featured-music-videos'>
+              <div class="fx-container" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'">
+                <div class="shop-btn">Shop the look</div>
+                <img class="item" src="../static/img/music/featured/feat-1.png" />
+                <div class="band">Taylor Swift - I knew you were trouble</div>
+              </div>
+              <div class="fx-container" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'">
+                <div class="shop-btn">Shop the look</div>
+                <img class="item" src="../static/img/music/featured/feat-2.png" />
+                <div class="band">Demi Lovato - Give Your Heart A Break</div>
+              </div>
+              <div class="fx-container" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'">
+                <div class="shop-btn">Shop the look</div>
+                <img class="item" src="../static/img/music/featured/feat-3.png" />
+                <div class="band">Austin Mahone - What About Love</div>
+              </div>
+            </div>
+          </div> 
+        </div> 
+       <!-- Artist List -->
+        <div class="row artist-list">
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
+            <img class="artist-img" src="../static/img/music/artists/austin-mahone/cover.png" />
+            <div class="artist-name">Austin Mahone</div>
+          </a>    
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
+            <img class="artist-img" src="../static/img/music/artists/avril-lavigne/cover.png" />
+            <div class="artist-name">Avril Lavigne</div>
+          </a>  
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
+            <img class="artist-img" src="../static/img/music/artists/danna-paola/cover.png" />
+            <div class="artist-name">Danna Paola</div>
+          </a>            
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
+            <img class="artist-img" src="../static/img/music/artists/demi-lovato/cover.png" />
+            <div class="artist-name">Demi Lovato</div>
+          </a> 
+          <a href="javascript:;" onclick="location.reload();location.href='../templates/artists/austin-mahone/artist.html'" class="four columns artist-btn">
+            <img class="artist-img" src="../static/img/music/artists/taylor-swift/cover.png" />
+            <div class="artist-name">Taylor Swift</div>
+          </a>
+        </div>  
+      </div> 
+      <div id="footer-container"><!-- Dynamic Content --></div> 
+    </div>  
 {% endblock %}

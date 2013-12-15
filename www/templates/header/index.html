@@ -1,0 +1,8 @@
+  <nav class="top-bar">
+      <p class="name">Inspired</p>
+      <div class="landing-top-bar">
+        {% if g.user and g.user.is_authenticated() %}
+            Hi {{ g.user.email_address }}!
+        {% endif %}
+      </div>
+  </nav>

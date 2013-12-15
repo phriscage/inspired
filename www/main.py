@@ -5,14 +5,15 @@ UI bootstrap file
 import sys
 import os
 import argparse
-from flask import Flask, jsonify, g, session
+from flask import Flask, request, render_template, redirect, url_for, \
+    abort, session, flash, g, jsonify
 from flask.ext.login import LoginManager, current_user
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../lib')
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../conf')
 
 from inspired_config import SQLALCHEMY_DATABASE_URI, FACEBOOK_APP_ID, \
-    FACEBOOK_APP_SECRET
+    FACEBOOK_APP_SECRET, API_URL
 from database import init_engine, db_session
 from flask_oauthlib.client import OAuth
 
@@ -59,6 +60,12 @@ def create_app(uri):
     @app.before_request
     def before_request():
         g.user = current_user
+        g.api_url = API_URL
+
+    @app.errorhandler(401)
+    def unauthorized_error_handle(error=None):
+        """ handle all unauthorized_errors with redirect to login """
+        return redirect(url_for('auth.login'))
 
     import core.views
     import auth.views 
