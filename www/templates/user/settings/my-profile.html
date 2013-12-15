@@ -1,4 +1,4 @@
-<form>
+<form id="profile-pass-change" action="#">
   <div class="row">
     <div class="twelve columns" style="border-bottom: 1px solid #2c3b4c; padding:0;">
       <div class="row profile-group">
@@ -9,11 +9,11 @@
       <div class="row profile-group">
         <div class="profile-pass-label small-5 columns">Password</div>
         <a class="profile-pass-field small-7 columns">Change My Password</a>
-        <div class="small-7 columns password-field">
-          <input type="password" id="old-password-field" placeholder="Old Password" >
-          <input type="password" id="new-password-field" placeholder="New Password" >
-          <button>Change Pasword</button>
-        </div>
+          <div class="small-7 columns password-field">
+            <input type="password" id="old_password" placeholder="Old Password" required>
+            <input type="password" id="new_password" placeholder="New Password" required>
+            <button>Change Pasword</button>
+          </div>
       </div>
     </div>
   </div>
@@ -49,3 +49,12 @@
     $('.profile-facebook-details').show();
   }); 
 </script>
+{% block bottom_javascript %}
+    <script type="text/javascript">
+        var user_id = '{{ g.user.id }}';
+        var api_url = '{{ g.api_url }}';
+        var api_key = '{{ g.user.api_key }}';
+    </script>
+    <script src="{{ url_for('static', filename='js/user/settings/my-profile.js') }}"></script>
+{% endblock %}
+

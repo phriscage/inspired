@@ -113,3 +113,53 @@ def get(user_id):
         response.headers['Content-Type'] = 'application/json'
         response.headers['mimetype'] = 'application/json'
         return response
+
+
+@users.route('/<int:user_id>/password', methods=['PUT', 'PATCH', 'OPTIONS'])
+@crossdomain(origin="*", methods=['PUT', 'PATCH'], headers='Content-Type')
+#@requires_api_key
+def patch_password(user_id):
+    """Update a user password identified by `user_id`.
+
+    **Example request:**
+
+    .. sourcecode:: http
+
+       GET /users/123 HTTP/1.1
+       Accept: application/json
+
+    **Example response:**
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+        data = {
+            'old_password': 'abc',
+            'new_password': 'xyz'
+        }
+
+    :statuscode 200: success
+    :statuscode 404: user does not exist
+    """
+    if not request.json:
+        abort(400)
+    for var in ['api_key', 'old_password', 'new_password']:
+        if var not in request.json:
+            abort(400)
+    try:
+        user = User.query.filter(User.id==user_id, 
+            User.api_key==request.json['api_key']).one()
+    except NoResultFound as error:
+        abort(401)
+    if not user.check_password(request.json['old_password']):
+        print "bad password"
+        abort(400)
+    else:
+        ## need to use the JSONEncoder class for datetime objects
+        user.set_password(request.json['new_password'])
+        db_session.add(user)
+        db_session.commit()
+        message = "Successfully changed password."
+        return jsonify(message=message, success=True)
