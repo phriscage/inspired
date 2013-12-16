@@ -48,8 +48,8 @@ class CastMember(Base):
     last_name = Column(String(120))
     actor_first_name = Column(String(120))
     actor_last_name = Column(String(120))
-    products = relationship("Product", secondary="cast_member_products", 
-        backref="products")
+    products = relationship("Product", secondary="cast_member_products",
+        backref="cast_members")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 

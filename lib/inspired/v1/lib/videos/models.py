@@ -12,6 +12,23 @@ from sqlalchemy import Column, String, DateTime, Table, ForeignKey
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from sqlalchemy.orm import relationship, backref
 
+""" video_products join_table used to defined the bi-directional
+    relationship between Video and Product. Creating a separate class is
+    overkill unless additional atributes are required.
+"""
+video_products = Table('video_products', Base.metadata,
+    Column('video_id', Integer(unsigned=True),
+        ForeignKey('videos.video_id',
+        name='fk_video_products_video_id', ondelete="CASCADE"),
+        index=True, nullable=False),
+    Column('product_id', Integer(unsigned=True),
+        ForeignKey('products.product_id',
+        name='fk_video_products_product_id', ondelete="CASCADE"),
+        index=True, nullable=False),
+    mysql_engine='InnoDB',
+    mysql_charset='utf8'
+)
+
 class Video(Base):
     """ Attributes for the Video model. Custom MapperExtension declarative for 
         before insert and update methods. The migrate.versioning api does not
@@ -30,11 +47,14 @@ class Video(Base):
     name = Column(String(120), unique=True, index=True, nullable=False)
     video_sources = relationship("VideoSource", backref="video")
     scenes = relationship("Scene", backref="video")
+    products = relationship("Product", secondary="video_products",
+        backref="videos")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, products=[]):
         self.name = name
+        self.products = products
 
     #def __repr__(self):
         #return '<User %r>' % (self.name)

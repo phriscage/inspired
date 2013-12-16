@@ -25,6 +25,9 @@ from sqlalchemy.exc import IntegrityError
 
 from database import Base, init_engine, db_session, init_models
 from inspired.v1.lib.videos.models import Video
+from inspired.v1.lib.products.models import Product
+from inspired.v1.lib.ref_product_types.models import RefProductType
+from inspired.v1.lib.ref_product_styles.models import RefProductStyle
 
 class TestVideoModel(unittest.TestCase):
     """ test the video model """
@@ -51,6 +54,9 @@ class TestVideoModel(unittest.TestCase):
     def setUp(self):
         """ use subsessions and do a rollback after each test. """
         self.db_session.begin(subtransactions=True)
+        self.product = Product(name='abc', upc='123',
+            product_type=RefProductType(name='abc'),
+            product_style=RefProductStyle(name='abc'))
 
     def tearDown(self):
         """ use subsessions and do a rollback after each test. """
@@ -63,6 +69,17 @@ class TestVideoModel(unittest.TestCase):
         """ test creating a video """
         args = {
             'name': 'abc',
+        }
+        video = Video(**args)
+        self.db_session.add(video)
+        self.assertEqual(self.db_session.commit(), None)
+        
+
+    def test_create_video_with_product(self):
+        """ test creating a video with product """
+        args = {
+            'name': 'abc',
+            'products': [self.product],
         }
         video = Video(**args)
         self.db_session.add(video)
@@ -101,6 +118,24 @@ class TestVideoModel(unittest.TestCase):
         self.db_session.commit()
         args = {
             'name': 'abc',
+        }
+        video = Video(**args)
+        self.db_session.add(video)
+        self.assertRaises(IntegrityError, lambda: self.db_session.commit())
+        
+
+    def test_create_two_videos_with_product_same_name(self):
+        """ test creating two videos with product with the same name """
+        args = {
+            'name': 'abc',
+            'products': [self.product],
+        }
+        video = Video(**args)
+        self.db_session.add(video)
+        self.db_session.commit()
+        args = {
+            'name': 'abc',
+            'products': [self.product],
         }
         video = Video(**args)
         self.db_session.add(video)
