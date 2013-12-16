@@ -144,18 +144,19 @@ def patch_password(user_id):
     :statuscode 404: user does not exist
     """
     if not request.json:
-        abort(400)
+        return jsonify(message="Not JSON", success=False), 400
     for var in ['api_key', 'old_password', 'new_password']:
         if var not in request.json:
-            abort(400)
+            message = "%s is missing in the payload" % var
+            return jsonify(message=message, success=False), 400
     try:
         user = User.query.filter(User.id==user_id, 
             User.api_key==request.json['api_key']).one()
     except NoResultFound as error:
-        abort(401)
+        return jsonify(message=None, success=False), 401
     if not user.check_password(request.json['old_password']):
         print "bad password"
-        abort(400)
+        return jsonify(message=None, success=False), 400
     else:
         ## need to use the JSONEncoder class for datetime objects
         user.set_password(request.json['new_password'])
