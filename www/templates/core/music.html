@@ -6,24 +6,7 @@
     <script src="{{ url_for('static', filename='js/js.functions.js') }}"></script>
 {% endblock %}
 {% block content %}
-  <div class="screen">
-    <div class="settings-menu">
-      <a class="settings-back" href="javascript:;">Back</a>
-      <a class="settings-back-back" href="javascript:;">Back</a>
-      <a class="settings-logout" href="{{ url_for('auth.get_logout') }}">Logout</a>
-      <div class="settings-title">Settings</div>      
-      <ul class="settings-menu-list">
-        <li class="my-profile">My Profile</li>
-        <li class="email-preferences">Email Preferences</li>
-        <li class="invite-friends">Invite Friends</li>
-        <li class="send-feedback">Send Feedback</li>
-        <li class="help">Help</li>
-        <li class="legal">Legal</li>
-      </ul>
-      <div class="ajax-container"></div>
-      <div class="settings-footer">Inspired [V-0.1]</br>&#169; Invidio, Inc 2013</div>  
-    </div>   
-    </div>   
+    {% include "user/settings/default.html" %}
     <div class="content">
       <div class="spinner-wrap"><div id="spinner"><img src="../static/img/spinner.gif"></div></div>
       {% include "header/index.html" %}

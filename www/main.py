@@ -70,10 +70,12 @@ def create_app(uri):
     import core.views
     import auth.views 
     import user.views 
+    import product.views
     #app.register_blueprint(landing.app)
     app.register_blueprint(core.views.core)
     app.register_blueprint(auth.views.auth, url_prefix='/auth')
     app.register_blueprint(user.views.user, url_prefix='/user')
+    app.register_blueprint(product.views.product, url_prefix='/product')
 
     return app
 
