@@ -8,8 +8,8 @@ from database import Base
 from inspired.v1.lib.helpers import BaseExtension
 #from product_sources.models import ProductSource
 #from scenes.models import Scene
-from sqlalchemy import Column, String, DateTime, Table, ForeignKey
-from sqlalchemy.dialects.mysql import INTEGER as Integer
+from sqlalchemy import Column, String, DateTime, Table, ForeignKey, Text
+from sqlalchemy.dialects.mysql import INTEGER as Integer, DECIMAL as Decimal
 from sqlalchemy.orm import relationship, backref
 
 class Product(Base):
@@ -27,9 +27,10 @@ class Product(Base):
     __mapper_args__ = { 'extension': BaseExtension() }
 
     id = Column('product_id', Integer(unsigned=True), primary_key=True)
-    name = Column(String(120), unique=True, index=True, nullable=False)
-    upc = Column(String(120), index=True, nullable=False)
-    image_url = Column(String(255))
+    upc = Column(Decimal(12,0), unique=True, index=True, nullable=False)
+    brand = Column(String(120), nullable=False)
+    model = Column(String(120), nullable=False)
+    description = Column(Text())
     ref_product_type_id = Column('ref_product_type_id', Integer(4, 
         unsigned=True), ForeignKey('ref_product_types.ref_product_type_id',
         name='fk_products_ref_product_type_id', ondelete="CASCADE"), 
@@ -43,13 +44,14 @@ class Product(Base):
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name, upc, product_type, product_style, image_url=None, 
-        ref_product_type_id=None, ref_product_style_id=None):
-        self.name = name
+    def __init__(self, upc, brand, model, description, product_type,
+        product_style, ref_product_type_id=None, ref_product_style_id=None):
         self.upc = upc
+        self.brand = brand
+        self.model = model
+        self.description = description
         self.product_type = product_type
         self.product_style = product_style
-        self.image_url = image_url
         self.ref_product_type_id = ref_product_type_id
         self.ref_product_style_id = ref_product_style_id
 

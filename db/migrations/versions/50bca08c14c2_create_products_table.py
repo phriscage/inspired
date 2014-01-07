@@ -12,16 +12,17 @@ down_revision = '2385b63bbe2d'
 
 from alembic import op
 from sqlalchemy import *
-from sqlalchemy.dialects.mysql import INTEGER as Integer
+from sqlalchemy.dialects.mysql import INTEGER as Integer, DECIMAL as Decimal
 
 
 def upgrade():
     op.create_table(
         'products',
         Column('product_id', Integer(unsigned=True), primary_key=True, nullable=False),
-        Column('name', String(length=120), unique=True, index=True, nullable=False),
-        Column('upc', String(length=120), index=True, nullable=False),
-        Column('image_url', String(length=255)),
+        Column('upc', Decimal(12,0), unique=True, index=True, nullable=False),
+        Column('brand', String(length=120), nullable=False),
+        Column('model', String(length=120), nullable=False),
+        Column('description', Text()),
         Column('ref_product_type_id', Integer(4, unsigned=True),
             ForeignKey('ref_product_types.ref_product_type_id',
             name='fk_scenes_ref_product_type_id', ondelete="CASCADE"),

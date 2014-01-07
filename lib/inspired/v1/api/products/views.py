@@ -92,7 +92,7 @@ def post():
     return jsonify(message=message, data=data, success=True), 201
     
 
-@products.route('/<int:product_id>', methods=['GET'])
+@products.route('/<int:product_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin="*", methods=['GET'], headers='Content-Type')
 #@requires_api_key
 def get(product_id):

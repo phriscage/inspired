@@ -12,20 +12,18 @@
       <div class="spinner-wrap"><div id="spinner"><img src="../static/img/spinner.gif"></div></div>
       {% include "header/index.html" %}
       <div class="main-container">
-<div class="row" id="product-page">
+        <div class="row" id="product-page">
           <div class="small-6 large-5 columns">
             <ul class="clearing-thumbs clearing-feature product-image" data-clearing>
-              <li class="clearing-featured-img"><a href="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1.png" style="background: yellow"><img src="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1.png"></a></li>
-              <li><a href="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1-2.png"><img src="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1-2.png"></a></li>
-              <li><a href="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1-3.png"><img src="../../../../static/img/music/artists/austin-mahone/what-about-love/item-1-3.png"></a></li>
+              <li class="clearing-featured-img"></li>
+              <li></li>
             </ul>
             <div class="maximize-btn"><img src="../../../../static/img/maximize.svg" type="image/svg+xml" /></div>
           </div>
           <div class="small-6 large-7 columns">
-            <div class="product-brand">Paul Smith</div>
-            <div class="product-model">striped beanie hat</div>
-            <div class="product-description">
-              Tonal blue striped wool beanie hat from Paul Smith featuring ribbed knit and a turn-up hem.
+            <div class="product-brand"></div>
+            <div class="product-model"></div>
+            <div class="product-description"></div>
             </div>
           </div>
         </div>
@@ -49,4 +47,12 @@
       </div>
       <div id="footer-container"><iframe id="footer-container-iframe" src="" seamless="yes"></iframe></div>
     </div>  
+{% endblock %}
+{% block bottom_javascript %}
+    <script type="text/javascript">
+        var product_id = '{{ product_id }}';
+        var api_url = '{{ g.api_url }}';
+        var api_key = '{{ g.user.api_key }}';
+    </script>
+    <script src="{{ url_for('static', filename='js/product/base.js') }}"></script>
 {% endblock %}
