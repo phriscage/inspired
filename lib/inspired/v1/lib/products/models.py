@@ -31,6 +31,7 @@ class Product(Base):
     brand = Column(String(120), nullable=False)
     model = Column(String(120), nullable=False)
     description = Column(Text())
+    product_images = relationship("ProductImage", backref="product")
     ref_product_type_id = Column('ref_product_type_id', Integer(4, 
         unsigned=True), ForeignKey('ref_product_types.ref_product_type_id',
         name='fk_products_ref_product_type_id', ondelete="CASCADE"), 
