@@ -45,14 +45,14 @@ class Product(Base):
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, upc, brand, model, description, product_type,
-        product_style, ref_product_type_id=None, ref_product_style_id=None):
+    def __init__(self, upc, brand, model, product_type, product_style,
+        description=None, ref_product_type_id=None, ref_product_style_id=None):
         self.upc = upc
         self.brand = brand
         self.model = model
-        self.description = description
         self.product_type = product_type
         self.product_style = product_style
+        self.description = description
         self.ref_product_type_id = ref_product_type_id
         self.ref_product_style_id = ref_product_style_id
 
