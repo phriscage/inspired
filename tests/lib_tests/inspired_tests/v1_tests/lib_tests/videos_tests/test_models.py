@@ -54,7 +54,7 @@ class TestVideoModel(unittest.TestCase):
     def setUp(self):
         """ use subsessions and do a rollback after each test. """
         self.db_session.begin(subtransactions=True)
-        self.product = Product(name='abc', upc='123',
+        self.product = Product(brand='abc', model='abc', upc='123',
             product_type=RefProductType(name='abc'),
             product_style=RefProductStyle(name='abc'))
 
@@ -72,7 +72,7 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
         
 
     def test_create_video_with_product(self):
@@ -83,7 +83,7 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
         
 
     def test_create_and_delete_video(self):
@@ -93,9 +93,9 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.db_session.commit()
+        self.assertEqual(self.db_session.flush(), None)
         self.db_session.delete(video)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
         
 
     def test_create_video_with_wrong_attribute(self):
@@ -105,7 +105,6 @@ class TestVideoModel(unittest.TestCase):
             'asdfas': 'asdfs'
         }
         self.assertRaises(TypeError, lambda: Video(**args))
-        self.db_session.commit()
         
 
     def test_create_two_videos_same_name(self):
@@ -115,13 +114,13 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.db_session.commit()
+        self.db_session.flush()
         args = {
             'name': 'abc',
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.assertRaises(IntegrityError, lambda: self.db_session.commit())
+        self.assertRaises(IntegrityError, lambda: self.db_session.flush())
         
 
     def test_create_two_videos_with_product_same_name(self):
@@ -132,14 +131,14 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.db_session.commit()
+        self.db_session.flush()
         args = {
             'name': 'abc',
             'products': [self.product],
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.assertRaises(IntegrityError, lambda: self.db_session.commit())
+        self.assertRaises(IntegrityError, lambda: self.db_session.flush())
         
 
     def test_query_all_one_video(self):
@@ -149,7 +148,7 @@ class TestVideoModel(unittest.TestCase):
         }
         video = Video(**args)
         self.db_session.add(video)
-        self.db_session.commit()
+        self.db_session.flush()
         videos = [video]
         self.assertEqual([video], self.db_session.query(Video).all())
         
@@ -166,7 +165,7 @@ class TestVideoModel(unittest.TestCase):
         video2 = Video(**args)
         self.db_session.add(video1)
         self.db_session.add(video2)
-        self.db_session.commit()
+        self.db_session.flush()
         self.assertEqual([video1, video2], self.db_session.query(Video).all())
 
 

@@ -45,8 +45,6 @@ class TestProductModel(unittest.TestCase):
         Base.query = cls.db_session.query_property()
         init_models()
         Base.metadata.create_all(cls.engine)
-        cls.product_type = RefProductType(name='abc')
-        cls.product_style = RefProductStyle(name='abc')
 
     @classmethod
     def tearDownClass(cls):
@@ -57,6 +55,8 @@ class TestProductModel(unittest.TestCase):
     def setUp(self):
         """ use subsessions and do a rollback after each test. """
         self.db_session.begin(subtransactions=True)
+        self.product_type = RefProductType(name='abc')
+        self.product_style = RefProductStyle(name='abc')
 
     def tearDown(self):
         """ use subsessions and do a rollback after each test. """
@@ -72,76 +72,82 @@ class TestProductModel(unittest.TestCase):
     def test_create_product(self):
         """ test creating a product """
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
         
 
     def test_create_and_delete_product(self):
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.db_session.commit()
+        self.db_session.flush()
         self.db_session.delete(product)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
         
 
     def test_create_product_with_wrong_attribute(self):
         """ test creating a product with wrong attribute """
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
             'asdfas': 'asdfs'
         }
         self.assertRaises(TypeError, lambda: Product(**args))
-        self.db_session.commit()
+        self.db_session.flush()
         
 
-    def test_create_two_products_same_name(self):
-        """ test creating two products with the same name """
+    def test_create_two_products_same_upc(self):
+        """ test creating two products with the same upc """
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.db_session.commit()
+        self.db_session.flush()
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.assertRaises(IntegrityError, lambda: self.db_session.commit())
+        self.assertRaises(IntegrityError, lambda: self.db_session.flush())
         
 
     def test_query_all_one_product(self):
         """ test querying a product """
         args = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.db_session.commit()
+        self.db_session.flush()
         products = [product]
         self.assertEqual([product], self.db_session.query(
             Product).all())
@@ -150,14 +156,16 @@ class TestProductModel(unittest.TestCase):
     def test_query_all_two_products(self):
         """ test querying two products """
         args = {
-            'name': 'abc1',
+            'brand': 'abc1',
+            'model': 'abc',
             'upc': '123',
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
         product1 = Product(**args)
         args = {
-            'name': 'abc2',
+            'brand': 'abc2',
+            'model': 'abc',
             'upc': '1234',
             'product_type': self.product_type,
             'product_style': self.product_style,
@@ -165,7 +173,7 @@ class TestProductModel(unittest.TestCase):
         product2 = Product(**args)
         self.db_session.add(product1)
         self.db_session.add(product2)
-        self.db_session.commit()
+        self.db_session.flush()
         self.assertEqual([product1, product2], 
             self.db_session.query(Product).all())
 

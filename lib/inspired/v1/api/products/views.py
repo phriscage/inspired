@@ -10,18 +10,22 @@ from database import db_session
 from inspired.v1.lib.products.models import Product
 from inspired.v1.lib.ref_product_types.models import RefProductType
 from inspired.v1.lib.ref_product_styles.models import RefProductStyle
+from inspired.v1.lib.product_images.models import ProductImage
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.util._collections import NamedTuple
+
 
 from flask import Blueprint, jsonify, request, abort, make_response
-from inspired.v1.helpers.serializers import JSONEncoder
+from inspired.v1.helpers.serializers import JSONEncoder, json_encoder
 import json
 
 products = Blueprint('products', __name__)
 
 #create routes
 @products.route('', methods=['POST', 'OPTIONS'])
-@crossdomain(origin="*", methods=['POST', 'OPTIONS'], headers='Content-Type')
+@crossdomain(origin="*", methods=['POST'], headers='Content-Type')
 #@requires_api_key
 def post():
     """Create a new product.
@@ -33,14 +37,20 @@ def post():
        POST /products/create HTTP/1.1
        Accept: application/json
         data = {
-            'name': 'abc',
+            'brand': 'abc',
+            'model': 'abc',
             'upc': '123',
             'product_type': {
                 'id': 1,
-            }
+            },
             'product_style': {
                 'id': 2,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc/asdf.png',
+            }, {
+                'url': '/static/item.png',
+            }]
         }
 
     **Example response:**
@@ -58,12 +68,17 @@ def post():
     """
     if not request.json:
         abort(400)
-    for var in ['name', 'upc', 'product_type', 'product_style']:
+    for var in ['brand', 'model', 'upc', 'product_type', 'product_style', 
+        'product_images']:
         if var not in request.json:
             abort(400)
         if var in ['product_type', 'product_style']:
             if 'id' not in request.json[var]:
                 abort(400)
+    if type(request.json['product_images']) is not list:
+        abort(400)
+    if len(request.json['product_images']) > 5:
+        abort(400)
     try:
         product = Product.query.filter(Product.upc==request.json['upc']).one()
         return jsonify(message='Conflict', success=False), 409
@@ -83,8 +98,13 @@ def post():
     except NoResultFound as error:
         return jsonify(message="Product Style '%s' Not Found" % 
             request.json['product_style']['id'], success=False), 404
+    product_image_data = request.json['product_images']
+    del(request.json['product_images'])
     product = Product(product_type=product_type, product_style=product_style, 
         **request.json)
+    product_images = [ProductImage(product=product, **data) \
+        for data in product_image_data]
+    product.product_images = product_images
     db_session.add(product)
     db_session.commit()
     message = 'Created: %s' % product.upc
@@ -113,7 +133,7 @@ def get(product_id):
        Content-Type: application/json
 
         data = {
-            'name': 'abc',
+            'brand': 'abc',
             'upc': '123'
             ...
         }
@@ -121,9 +141,29 @@ def get(product_id):
     :statuscode 200: success
     :statuscode 404: product does not exist
     """
+    ## columns can either be str or class Attributes, but class Attributes are 
+    ## required to specify columns
+    columns = [Product.id, Product.upc, Product.brand, Product.model,
+        Product.product_type, RefProductType.name, 
+        Product.product_style, RefProductStyle.name,
+        Product.product_images, ProductImage.url]
     try:
         message = 'success'
-        data = Product.query.filter(Product.id==product_id).first()
+        data = Product.query.join(Product.product_type, Product.product_style
+            ).outerjoin(Product.product_images
+            ).options(
+                contains_eager(Product.product_type), 
+                contains_eager(Product.product_style),
+                contains_eager(Product.product_images)
+            ).filter(Product.id==product_id
+            ).one()
+        ## TODO need to determine best method to parse the NamedTuple for
+        ## selecting specific columns
+        #data = db_session.query(*columns).join(Product.product_type, 
+            #Product.product_style
+            #).outerjoin(Product.product_images
+            #).filter(Product.id==product_id
+            #).one()
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
         return jsonify(message=message, success=False), 500
@@ -132,9 +172,8 @@ def get(product_id):
         return jsonify(error=404, message=message, success=False), 404
     else:
         ## need to use the JSONEncoder class for datetime objects
-        data = data.to_json
         response = make_response(json.dumps(dict(data=data, message=message,
-            success=True), cls=JSONEncoder))
+            success=True), cls=json_encoder(False, columns)))
         response.headers['Content-Type'] = 'application/json'
         response.headers['mimetype'] = 'application/json'
         return response

@@ -83,11 +83,13 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_check_if_product_exists(self):
         """ testing checking if a product exists """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': self.product_type,
             'product_style': self.product_style,
         }
@@ -95,10 +97,11 @@ class ProductsApiTestCase(unittest.TestCase):
         self.db_session.add(product)
         self.db_session.commit()
         response = self.client.get('/api/v1/products/%i' % product.id)
+        print response.data
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
-        for var in ['upc', 'name']:
+        for var in ['upc', 'brand', 'model']:
             self.assertEquals(json.loads(response.data)['data'][var], 
                 locals()[var])
         self.db_session.delete(product)
@@ -107,17 +110,24 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_one_product(self):
         """ testing adding a product """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
         response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
@@ -129,11 +139,13 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_one_product_with_out_product_type_attribute(self):
         """ testing adding a product with out product_type attribute """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_style': {
                 'id': self.product_style.id,
             }
@@ -149,11 +161,13 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_one_product_with_out_product_style_attribute(self):
         """ testing adding a product with out product_style attribute """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             }
@@ -169,18 +183,25 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_one_product_with_missing_product_type(self):
         """ testing adding a product with missing product_type """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         id = 9999
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
         response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
@@ -193,18 +214,25 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_one_product_with_missing_product_style(self):
         """ testing adding a product with missing product_style """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         id = 9999 
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': id
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
         response = self.client.post('/api/v1/products', data=json.dumps(args),
             content_type='application/json')
@@ -217,29 +245,43 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_two_products(self):
         """ testing adding two products """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
-        upc = 'xyz'
-        name = 'xyz'
+        upc = '1234'
+        brand = 'xyz'
+        model = 'abc'
         args2 = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
         for id, values in enumerate([args, args2], 1):
             response = self.client.post('/api/v1/products', 
@@ -254,29 +296,43 @@ class ProductsApiTestCase(unittest.TestCase):
 
     def test_add_two_products_same_upc(self):
         """ testing adding two products with same upc """
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
-        upc = 'abc'
-        name = 'abc'
+        upc = '123'
+        brand = 'abc'
+        model = 'abc'
         args2 = {
             'upc': upc,
-            'name': name,
+            'brand': brand,
+            'model': model,
             'product_type': {
                 'id': self.product_type.id,
             },
             'product_style': {
                 'id': self.product_style.id,
-            }
+            },
+            'product_images': [{
+                'url': 'http://abc.com/abc.png'
+            }, {
+                'url': '/static/abc.png'
+            }]
         }
         for id, values in enumerate([args, args2], 1):
             response = self.client.post('/api/v1/products', 
