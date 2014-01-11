@@ -28,18 +28,14 @@ class Retailer(Base):
 
     id = Column('retailer_id', Integer(unsigned=True), primary_key=True)
     name = Column(String(120), nullable=False)
-    url = Column(String(255), nullable=False)
-    product_id = Column('product_id', Integer(unsigned=True), 
-        ForeignKey('products.product_id', name='fk_retailers_product_id',
-        ondelete="CASCADE"), nullable=False, index=True)
-    product = relationship("Product", backref="retailers")
+    url = Column(String(255))
+    image_url = Column(String(2083))
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name, url, product):
+    def __init__(self, name, image_url):
         self.name = name
-        self.url = url
-        self.product = product
+        self.image_url = image_url
 
     #def __repr__(self):
         #return '<User %r>' % (self.name)

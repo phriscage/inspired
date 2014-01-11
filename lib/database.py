@@ -60,6 +60,10 @@ class Base(object):
         """ get each class attribute value for the field name """
         return dict((field, getattr(self, field)) for field in self.fields)
 
+    @property
+    def to_json(self):
+        """ return a dictionary for field items """
+        return self.field_items
 
 Base.query = db_session.query_property()
 

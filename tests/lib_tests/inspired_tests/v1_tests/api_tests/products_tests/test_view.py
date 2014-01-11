@@ -97,7 +97,7 @@ class ProductsApiTestCase(unittest.TestCase):
         self.db_session.add(product)
         self.db_session.commit()
         response = self.client.get('/api/v1/products/%i' % product.id)
-        print response.data
+        #print response.data
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
