@@ -33,8 +33,9 @@ class Retailer(Base):
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 
-    def __init__(self, name, image_url):
+    def __init__(self, name, url, image_url):
         self.name = name
+        self.url = url
         self.image_url = image_url
 
     #def __repr__(self):

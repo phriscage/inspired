@@ -82,6 +82,8 @@ def init_models():
     import inspired.v1.lib.videos.models
     import inspired.v1.lib.video_sources.models
     import inspired.v1.lib.product_images.models
+    import inspired.v1.lib.product_retailers.models
+    import inspired.v1.lib.retailers.models
     
 def init_db(engine):
     """ initialize the database """

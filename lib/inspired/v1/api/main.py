@@ -21,6 +21,8 @@ def create_app(uri):
     app = Flask(__name__)
     #app.config.from_pyfile(config)
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
+    #init_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=3600, 
+        #echo=True)
     init_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=3600)
 
     @app.teardown_appcontext
