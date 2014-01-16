@@ -33,11 +33,11 @@ class ProductRetailer(Base):
     product_id = Column('product_id', Integer(unsigned=True), 
         ForeignKey('products.product_id', name='fk_product_retailers_product_id',
         ondelete="CASCADE"), nullable=False, index=True)
-    product = relationship("Product", backref="product_retailers")
+    #product = relationship("Product", backref="product_retailers")
     retailer_id = Column('retailer_id', Integer(unsigned=True),
         ForeignKey('retailers.retailer_id', name='fk_product_retailers_retailer_id',
         ondelete="CASCADE"), nullable=False, index=True)
-    #retailer = relationship("Retailer", backref="products")
+    retailer = relationship("Retailer", backref="product_retailers")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 

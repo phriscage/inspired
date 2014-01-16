@@ -44,7 +44,8 @@ def json_encoder(revisit_self=False, columns=[]):
                         return None
                     _visited_objs.append(obj)
                 class_name = obj.__class__.__name__
-                #columns = [col for col in obj.__mapper__.c.keys()]
+                #print [col for col in obj.__mapper__.c.keys()]
+                #print [col for col in obj.__dict__.keys()]
                 fields = {}
                 for field in (field for field in dir(obj) \
                     if not field.startswith('_') and field != 'metadata'):
@@ -63,6 +64,7 @@ def json_encoder(revisit_self=False, columns=[]):
                             val = float(val)
                         #print "--->>>>>", field, val
                         ## many-to-many relationships recursive
+                        #print field, type(val)
                         if (isinstance(val, list) and len(val) > 0 \
                             and isinstance(val[0].__class__, DeclarativeMeta)):
                             val = [self.default(c_val) for c_val in val]

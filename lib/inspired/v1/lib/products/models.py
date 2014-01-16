@@ -42,6 +42,10 @@ class Product(Base):
         name='fk_products_ref_product_style_id', ondelete="CASCADE"), 
         nullable=False, index=True)
     product_style = relationship("RefProductStyle", backref="products")
+    retailers = relationship("Retailer", secondary="product_retailers",
+        backref="products")
+    product_retailers = relationship("ProductRetailer",
+        backref="product")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
 

@@ -11,6 +11,8 @@ from inspired.v1.lib.products.models import Product
 from inspired.v1.lib.ref_product_types.models import RefProductType
 from inspired.v1.lib.ref_product_styles.models import RefProductStyle
 from inspired.v1.lib.product_images.models import ProductImage
+from inspired.v1.lib.product_retailers.models import ProductRetailer
+from inspired.v1.lib.retailers.models import Retailer
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload, contains_eager
@@ -146,15 +148,24 @@ def get(product_id):
     columns = [Product.id, Product.upc, Product.brand, Product.model,
         Product.product_type, RefProductType.name, 
         Product.product_style, RefProductStyle.name,
-        Product.product_images, ProductImage.url]
+        Product.product_images, ProductImage.url,
+        Product.product_retailers, ProductRetailer.url, 
+        ProductRetailer.retailer, Retailer.name, Retailer.image_url]
     try:
         message = 'success'
-        data = Product.query.join(Product.product_type, Product.product_style
+        ## INNER JOIN any relationship in 'join()' and LEFT OUTER JOIN any other
+        ## relationship in 'outerjoin()'. contains_eager will eager load the 
+        ## columns and you need to include indirect relationships in one ().
+        data = Product.query.join(Product.product_type, Product.product_style,
+            Product.product_retailers, ProductRetailer.retailer
             ).outerjoin(Product.product_images
             ).options(
                 contains_eager(Product.product_type), 
                 contains_eager(Product.product_style),
-                contains_eager(Product.product_images)
+                contains_eager(Product.product_images),
+                contains_eager(Product.product_retailers),
+                contains_eager(Product.product_retailers, 
+                    ProductRetailer.retailer),
             ).filter(Product.id==product_id
             ).one()
         ## TODO need to determine best method to parse the NamedTuple for
