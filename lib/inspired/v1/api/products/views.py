@@ -145,11 +145,11 @@ def get(product_id):
     """
     ## columns can either be str or class Attributes, but class Attributes are 
     ## required to specify columns
-    columns = [Product.id, Product.upc, Product.brand, Product.model,
+    columns = [Product.upc, Product.brand, Product.model,
         Product.product_type, RefProductType.name, 
         Product.product_style, RefProductStyle.name,
         Product.product_images, ProductImage.url,
-        Product.product_retailers, ProductRetailer.url, 
+        Product.product_retailers, ProductRetailer.url, ProductRetailer.price,
         ProductRetailer.retailer, Retailer.name, Retailer.image_url]
     try:
         message = 'success'

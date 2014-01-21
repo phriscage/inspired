@@ -24,11 +24,17 @@ def upgrade():
     #Base.metadata.bind = op.get_bind()
     now = datetime.datetime.now()
     #for style in ['original', 'low_end', 'high_end']:
+    op.execute(Retailer.__table__.insert().values(name="Farfetch",
+        url="http://www.farfetch.com",image_url="/static/img/retailers/farfetch.png",
+        created_at=now, updated_at=now))
+    op.execute(ProductRetailer.__table__.insert().values(
+        url="http://go.redirectingat.com?id=35687X941090&xs=1&url=http%3A%2F%2Fwww.farfetch.com%2Fshopping%2Fmen%2Fpaul-smith-striped-beanie-hat-item-10519288.aspx%3Fstoreid%3D9364", price="103.81", retailer_id=1, product_id=1,
+        created_at=now, updated_at=now))
     op.execute(Retailer.__table__.insert().values(name="Abc",
         url="http://abc.com",image_url="http://abc.com/abc.png",
         created_at=now, updated_at=now))
     op.execute(ProductRetailer.__table__.insert().values(
-        url="http://abc.com?asdfs", price="1.23", retailer_id=1, product_id=1,
+        url="http://abc.com?asdfs", price="1.23", retailer_id=2, product_id=1,
         created_at=now, updated_at=now))
 
 def downgrade():
