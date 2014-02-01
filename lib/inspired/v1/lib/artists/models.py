@@ -45,18 +45,9 @@ class Artist(Base):
 
     id = Column('artist_id', Integer(unsigned=True), primary_key=True)
     name = Column(String(120), unique=True, index=True, nullable=False)
+    image_url = Column(String(2083))
     first_name = Column(String(60))
     last_name = Column(String(60))
     videos = relationship("Video", secondary="artist_videos", backref="artists")
     created_at = Column(DateTime(), nullable=False)
     updated_at = Column(DateTime(), nullable=False)
-
-    def __init__(self, name, first_name=None, last_name=None, videos=[]):
-        self.name = name
-        self.first_name = first_name
-        self.last_name = last_name
-        self.videos = videos
-
-    #def __repr__(self):
-        #return '<User %r>' % (self.name)
-

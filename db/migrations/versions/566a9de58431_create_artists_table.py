@@ -20,6 +20,7 @@ def upgrade():
         'artists',
         Column('artist_id', INTEGER(unsigned=True), primary_key=True, nullable=False),
         Column('name', String(length=120), unique=True, index=True, nullable=False),
+        Column('image_url', String(length=2083)),
         Column('first_name', String(length=60)),
         Column('last_name', String(length=60)),
         Column('created_at', DateTime, nullable=False),

@@ -5,26 +5,24 @@
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
-## need to import all child models for now
-import inspired.v1.lib.videos.models
-import inspired.v1.lib.video_sources.models
-import inspired.v1.lib.scenes.models
-import inspired.v1.lib.cast_members.models
-import inspired.v1.lib.products.models
-import inspired.v1.lib.ref_product_types.models
-import inspired.v1.lib.ref_product_styles.models
-from inspired.v1.lib.artists.models import Artist
 from database import db_session
+## need to import all child models for now
+from inspired.v1.lib.artists.models import Artist
+from inspired.v1.lib.videos.models import Video
+from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.util._collections import NamedTuple
 
-from flask import Blueprint, jsonify, request, abort
-from inspired.v1.helpers.serializers import JSONEncoder
+from flask import Blueprint, jsonify, request, abort, make_response
+from inspired.v1.helpers.serializers import JSONEncoder, json_encoder
 import json
 
 artists = Blueprint('artists', __name__)
 
 #create routes
-@artists.route('', methods=['GET'])
+@artists.route('', methods=['GET', 'OPTIONS'])
+@crossdomain(origin="*", methods=['GET'], headers='Content-Type')
 #@requires_api_key
 def get_all():
     """Get all the artists.
@@ -46,10 +44,12 @@ def get_all():
        {
          "data": [
            {
-             "name": "originial",
+            "name": "abc",
+            "image_url": "xyz"
            },
            {
-             "name": "low_end",
+            "name": "xyz",
+            "image_url": "123"
            }
          ]
        }
@@ -57,19 +57,29 @@ def get_all():
     :statuscode 200: success
     :statuscode 404: artists do not exist
     """
+    ## columns can either be str or class Attributes, but class Attributes are
+    ## required to specify columns
+    columns = [Artist.name, Artist.image_url,
+        Artist.videos, Video.name]
     try:
-        #data, message = ([{'name': 'abc'}, {'name': 'xyz'}], 'test message')
         message = 'success'
-        data = [obj.to_json for obj in Artist.query.all() if obj]
+        data = Artist.query.outerjoin(Artist.videos
+            ).options(
+                contains_eager(Artist.videos),
+            ).limit(10).all()
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
         return jsonify(message=message, success=False), 500
-    if data is None:
+    if data is None or not data:
+        message = "No artist data exists."
         return jsonify(error=404, message=message, success=False), 404
     else:
-        #return json.dumps(data=data, message=message, success=True)
-        return json.dumps(dict(data=data, message=message, success=True),
-            cls=JSONEncoder)
+        ## need to use the JSONEncoder class for datetime objects
+        response = make_response(json.dumps(dict(data=data, message=message,
+            success=True), cls=json_encoder(False, columns)))
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['mimetype'] = 'application/json'
+        return response
 
 
 #create routes
@@ -106,7 +116,7 @@ def post():
     if not request.json or not 'name' in request.json:
         abort(400)
     try:
-        artist = Artist.query.filter(Artist.name == request.json['name']).one()
+        artist = Artist.query.filter(Artist.name == request.json['name']).first()
         return jsonify(message='Conflict', success=True), 409
     except NoResultFound as error:
         pass
@@ -117,10 +127,10 @@ def post():
     db_session.add(a)
     db_session.commit()
     return jsonify(message='hello', success=True), 200
-    
 
 
-@artists.route('/<int:artist_id>', methods=['GET'])
+@artists.route('/<int:artist_id>', methods=['GET', 'OPTIONS'])
+@crossdomain(origin="*", methods=['GET'], headers='Content-Type')
 #@requires_api_key
 def get(artist_id):
     """Get a artist identified by `artist_id`.
@@ -142,23 +152,40 @@ def get(artist_id):
        {
         "name": "Joe Schmoe",
         "first_name": "Joe",
-        "second_name": "Schmoe"
+        "second_name": "Schmoe",
+        "image_url": "abc"
        }
 
     :statuscode 200: success
     :statuscode 404: artist does not exist
     """
+    ## columns can either be str or class Attributes, but class Attributes are
+    ## required to specify columns
+    columns = [Artist.name, Artist.first_name, Artist.last_name, 
+        Artist.image_url, 
+        Artist.videos, Video.name]
     try:
         message = 'success'
-        data = Artist.query.filter(Artist.id==artist_id).first()
+        data = Artist.query.outerjoin(Artist.videos
+        #data = db_session.query(*columns).outerjoin(Artist.videos
+            ).options(
+                contains_eager(Artist.videos),
+            ).filter(Artist.id==artist_id
+            ).first()
+    except NoResultFound as error:
+        message = '%s: %s' % (error.__class__.__name__, error)
+        return jsonify(message=message, success=False), 404
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
         return jsonify(message=message, success=False), 500
+
     if data is None:
         message = "'%s' record does not exist." % artist_id
         return jsonify(error=404, message=message, success=False), 404
     else:
-        data = data.to_json
-        #return json.dumps(data=data, message=message, success=True)
-        return json.dumps(dict(data=data, message=message, success=True),
-            cls=JSONEncoder)
+        ## need to use the JSONEncoder class for datetime objects
+        response = make_response(json.dumps(dict(data=data, message=message,
+            success=True), cls=json_encoder(False, columns)))
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['mimetype'] = 'application/json'
+        return response
