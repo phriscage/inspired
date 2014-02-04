@@ -95,9 +95,8 @@ class ProductsApiTestCase(unittest.TestCase):
         }
         product = Product(**args)
         self.db_session.add(product)
-        self.db_session.commit()
+        self.db_session.flush()
         response = self.client.get('/api/v1/products/%i' % product.id)
-        #print response.data
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.headers['Content-Type'], 'application/json')
         self.assertTrue(json.loads(response.data)['success'])
@@ -105,7 +104,7 @@ class ProductsApiTestCase(unittest.TestCase):
             self.assertEquals(json.loads(response.data)['data'][var], 
                 locals()[var])
         self.db_session.delete(product)
-        self.assertEqual(self.db_session.commit(), None)
+        self.assertEqual(self.db_session.flush(), None)
 
 
     def test_add_one_product(self):

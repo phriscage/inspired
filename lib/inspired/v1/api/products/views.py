@@ -81,25 +81,24 @@ def post():
         abort(400)
     if len(request.json['product_images']) > 5:
         abort(400)
-    try:
-        product = Product.query.filter(Product.upc==request.json['upc']).one()
+    product = Product.query.filter(Product.upc==request.json['upc']).first()
+    if product:
         return jsonify(message='Conflict', success=False), 409
-    except NoResultFound as error:
-        pass
-    try:
-        product_type = RefProductType.query.filter(
-            RefProductType.id==request.json['product_type']['id']).one()
-        del(request.json['product_type'])
-    except NoResultFound as error:
+
+    product_type = RefProductType.query.filter(
+        RefProductType.id==request.json['product_type']['id']).first()
+    if not product_type:
         return jsonify(message="Product Type '%s' Not Found" % 
             request.json['product_type']['id'], success=False), 404
-    try:
-        product_style = RefProductStyle.query.filter(
-            RefProductStyle.id==request.json['product_style']['id']).one()
-        del(request.json['product_style'])
-    except NoResultFound as error:
+    del(request.json['product_type'])
+
+    product_style = RefProductStyle.query.filter(
+        RefProductStyle.id==request.json['product_style']['id']).first()
+    if not product_style:
         return jsonify(message="Product Style '%s' Not Found" % 
             request.json['product_style']['id'], success=False), 404
+    del(request.json['product_style'])
+
     product_image_data = request.json['product_images']
     del(request.json['product_images'])
     product = Product(product_type=product_type, product_style=product_style, 
@@ -157,8 +156,8 @@ def get(product_id):
         ## relationship in 'outerjoin()'. contains_eager will eager load the 
         ## columns and you need to include indirect relationships in one ().
         data = Product.query.join(Product.product_type, Product.product_style,
-            Product.product_retailers, ProductRetailer.retailer
-            ).outerjoin(Product.product_images
+            ).outerjoin(Product.product_images, Product.product_retailers, 
+                ProductRetailer.retailer
             ).options(
                 contains_eager(Product.product_type), 
                 contains_eager(Product.product_style),
@@ -167,17 +166,21 @@ def get(product_id):
                 contains_eager(Product.product_retailers, 
                     ProductRetailer.retailer),
             ).filter(Product.id==product_id
-            ).one()
+            ).first()
         ## TODO need to determine best method to parse the NamedTuple for
         ## selecting specific columns
         #data = db_session.query(*columns).join(Product.product_type, 
             #Product.product_style
             #).outerjoin(Product.product_images
             #).filter(Product.id==product_id
-            #).one()
+            #).first()
+    except NoResultFound as error:
+        message = '%s: %s' % (error.__class__.__name__, error)
+        return jsonify(message=message, success=False), 404
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
         return jsonify(message=message, success=False), 500
+
     if data is None:
         message = "'%s' record does not exist." % product_id
         return jsonify(error=404, message=message, success=False), 404
