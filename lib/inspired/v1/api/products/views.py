@@ -16,7 +16,6 @@ from inspired.v1.lib.retailers.models import Retailer
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload, contains_eager
-from sqlalchemy.util._collections import NamedTuple
 
 
 from flask import Blueprint, jsonify, request, abort, make_response
