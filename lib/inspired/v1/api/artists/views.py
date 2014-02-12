@@ -12,7 +12,6 @@ from inspired.v1.lib.videos.models import Video
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload, contains_eager
-from sqlalchemy.util._collections import NamedTuple
 
 from flask import Blueprint, jsonify, request, abort, make_response
 from inspired.v1.helpers.serializers import JSONEncoder, json_encoder
