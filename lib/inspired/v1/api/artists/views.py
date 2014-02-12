@@ -115,17 +115,20 @@ def post():
     if not request.json or not 'name' in request.json:
         abort(400)
     try:
-        artist = Artist.query.filter(Artist.name == request.json['name']).first()
-        return jsonify(message='Conflict', success=True), 409
+        artist = Artist.query.filter(Artist.name==request.json['name']).first()
     except NoResultFound as error:
         pass
-    a = Artist(name=request.json['name'])
+    if artist:
+        return jsonify(message='Conflict', success=False), 409
+    artist = Artist(name=request.json['name'])
     if 'video_name' in request.json:
-        v = Video(name=request.json['video_name'])
-        a.videos.append(v)
-    db_session.add(a)
+        video = Video(name=request.json['video_name'])
+        artist.videos.append(video)
+    db_session.add(artist)
     db_session.commit()
-    return jsonify(message='hello', success=True), 200
+    message = 'Created: %s' % artist.name
+    data = dict(id=artist.id, name=artist.name)
+    return jsonify(message=message, data=data, success=True), 201
 
 
 @artists.route('/<int:artist_id>', methods=['GET', 'OPTIONS'])
