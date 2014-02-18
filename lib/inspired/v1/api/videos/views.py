@@ -59,7 +59,7 @@ def get_all():
     ## required to specify columns
     columns = [Video.name,
         #Video.products, Product.upc]
-	Video.video_sources, VideoSource.name, VideoSource.url]
+	    Video.video_sources, VideoSource.name, VideoSource.url]
     try:
         message = 'success'
         data = Video.query.outerjoin(Video.video_sources

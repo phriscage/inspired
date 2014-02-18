@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../lib')
 from database import db_session
 ## need to import all child models for now
 from inspired.v1.lib.artists.models import Artist
+from inspired.v1.lib.video_sources.models import VideoSource
 from inspired.v1.lib.videos.models import Video
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
@@ -164,14 +165,14 @@ def get(artist_id):
     ## columns can either be str or class Attributes, but class Attributes are
     ## required to specify columns
     columns = [Artist.name, Artist.first_name, Artist.last_name, 
-        Artist.image_url, 
-        Artist.videos, Video.name]
+        Artist.image_url,
+        Artist.videos, Video.name, 
+        Video.video_sources, VideoSource.url]
     try:
         message = 'success'
-        data = Artist.query.outerjoin(Artist.videos
-        #data = db_session.query(*columns).outerjoin(Artist.videos
+        data = Artist.query.outerjoin(Artist.videos, Video.video_sources
             ).options(
-                contains_eager(Artist.videos),
+                contains_eager(Artist.videos, Video.video_sources),
             ).filter(Artist.id==artist_id
             ).first()
     except NoResultFound as error:
