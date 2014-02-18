@@ -55,11 +55,9 @@ def get_all():
     :statuscode 200: success
     :statuscode 404: videos do not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Video.name,
+    columns = ['Video.name', 'Video.image_url',
         #Video.products, Product.upc]
-	Video.video_sources, VideoSource.name, VideoSource.url]
+	    'Video.video_sources', 'VideoSource.name', 'VideoSource.url']
     try:
         message = 'success'
         data = Video.query.outerjoin(Video.video_sources
@@ -111,11 +109,9 @@ def get(video_id):
     :statuscode 200: success
     :statuscode 404: video does not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Video.name,
-        Video.video_sources, VideoSource.name, VideoSource.url,
-        Video.products, Product.upc]
+    columns = ['Video.name', 'Video.image_url',
+        'Video.video_sources', 'VideoSource.name', 'VideoSource.url',
+        'Video.products', 'Product.upc', 'Product.uri']
     try:
         message = 'success'
         data = Video.query.outerjoin(Video.video_sources, Video.products
