@@ -36,9 +36,10 @@
 
         $.each(response.data.videos, function(i, video) {
             var $video, $video_img, $video_info, $video_title, $artist_name;
-            $video = $('<a>').attr('href', '/video/1').addClass('four columns artist-video-btn');
+            $video = $('<a>').attr('href', video.uri).addClass('four columns artist-video-btn');
             // need to create a video image_url
-            $video_img = $('<img>').addClass('video-img').attr('src', artist_image_url);
+            var video_image_url = window.location.origin + video.image_url
+            $video_img = $('<img>').addClass('video-img').attr('src', video_image_url);
             $video_info = $('<div>').addClass('video-info');
             $video_title = $('<div>').addClass('video-title').html(video.name);
             $artist_name = $('<div>').addClass('artist-name').html(response.data.name);

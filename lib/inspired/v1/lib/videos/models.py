@@ -45,6 +45,7 @@ class Video(Base):
 
     id = Column('video_id', Integer(unsigned=True), primary_key=True)
     name = Column(String(120), unique=True, index=True, nullable=False)
+    image_url = Column(String(2083))
     video_sources = relationship("VideoSource", backref="video")
     scenes = relationship("Scene", backref="video")
     products = relationship("Product", secondary="video_products",

@@ -44,15 +44,17 @@ def json_encoder(revisit_self=False, columns=[]):
                         return None
                     _visited_objs.append(obj)
                 class_name = obj.__class__.__name__
-                #print [col for col in obj.__mapper__.c.keys()]
-                #print [col for col in obj.__dict__.keys()]
+                #print sorted([col for col in obj.__mapper__.c.keys()])
+                #print sorted([col for col in obj.__dict__.keys()])
                 fields = {}
                 for field in (field for field in dir(obj) \
                     if not field.startswith('_') and field != 'metadata'):
-                    if field not in obj.__dict__:
-                        continue
+                    #if field not in obj.__dict__:
+                        #continue
                     class_field = '%s.%s' % (class_name, field)
                     if columns and class_field not in columns:
+                        #print getattr(obj, field)
+                        #print class_field
                         continue
                     if field in obj.__dict__:
                         val = obj.__dict__[field]
@@ -64,11 +66,13 @@ def json_encoder(revisit_self=False, columns=[]):
                             val = float(val)
                         #print "--->>>>>", field, val
                         ## many-to-many relationships recursive
-                        #print field, type(val)
+                        #print field, type(val), val
                         if (isinstance(val, list) and len(val) > 0 \
                             and isinstance(val[0].__class__, DeclarativeMeta)):
                             val = [self.default(c_val) for c_val in val]
-                    fields[field] = val
+                        fields[field] = val
+                    else:
+                        fields[field] = getattr(obj, field)
                 #print fields
                 return fields
             #try:

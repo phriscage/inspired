@@ -20,6 +20,7 @@ def upgrade():
         'videos', 
         Column('video_id', Integer(unsigned=True), primary_key=True, nullable=False),
         Column('name', String(length=120), unique=True, index=True, nullable=False),
+        Column('image_url', String(length=2083)),
         Column('created_at', DateTime, nullable=False),
         Column('updated_at', DateTime, nullable=False),
         mysql_engine='InnoDB',

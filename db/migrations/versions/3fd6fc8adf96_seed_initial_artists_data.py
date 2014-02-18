@@ -28,6 +28,7 @@ def upgrade():
     #Base.metadata.bind = op.get_bind()
     now = datetime.datetime.now()
     op.execute(Video.__table__.insert().values(name='What About Love',
+        image_url="/static/img/music/artists/austin-mahone/what-about-love.PNG",
         created_at=now, updated_at=now))
     op.execute(VideoSource.__table__.insert().values(name='youtube',
         url='https://www.youtube.com/watch?v=2PEG82Udb90', video_id=1,

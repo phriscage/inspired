@@ -57,10 +57,8 @@ def get_all():
     :statuscode 200: success
     :statuscode 404: artists do not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Artist.name, Artist.image_url,
-        Artist.videos, Video.name]
+    columns = ['Artist.name', 'Artist.image_url',
+        'Artist.videos', 'Video.name', 'Video.uri']
     try:
         message = 'success'
         data = Artist.query.outerjoin(Artist.videos
@@ -162,12 +160,10 @@ def get(artist_id):
     :statuscode 200: success
     :statuscode 404: artist does not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Artist.name, Artist.first_name, Artist.last_name, 
-        Artist.image_url,
-        Artist.videos, Video.name, 
-        Video.video_sources, VideoSource.url]
+    columns = ['Artist.name', 'Artist.first_name', 'Artist.last_name', 
+        'Artist.image_url',
+        'Artist.videos', 'Video.name', 'Video.image_url', 'Video.uri',
+        'Video.video_sources', 'VideoSource.url']
     try:
         message = 'success'
         data = Artist.query.outerjoin(Artist.videos, Video.video_sources
