@@ -72,6 +72,7 @@ class TestVideoSourceModel(unittest.TestCase):
         args = {
             'name': 'abc',
             'url': 'http://123.com',
+            'source_id': '123', 
             'video': self.video,
         }
         video_source = VideoSource(**args)
@@ -83,6 +84,7 @@ class TestVideoSourceModel(unittest.TestCase):
         args = {
             'name': 'abc',
             'url': 'http://123.com',
+            'source_id': '123', 
             'video': self.video
         }
         video_source = VideoSource(**args)
@@ -97,6 +99,7 @@ class TestVideoSourceModel(unittest.TestCase):
         args = {
             'name': 'abc',
             'url': 'http://123.com',
+            'source_id': '123', 
             'video': self.video,
             'asdfas': 'asdfs'
         }
@@ -104,31 +107,12 @@ class TestVideoSourceModel(unittest.TestCase):
         self.db_session.commit()
         
 
-    def test_create_two_video_sources_same_name(self):
-        """ test creating two video_sources with the same name """
-        args = {
-            'name': 'abc',
-            'url': 'http://123.com',
-            'video': self.video,
-        }
-        video_source = VideoSource(**args)
-        self.db_session.add(video_source)
-        self.db_session.commit()
-        args = {
-            'name': 'abc',
-            'url': 'http://123.com',
-            'video': self.video,
-        }
-        video_source = VideoSource(**args)
-        self.db_session.add(video_source)
-        self.assertRaises(IntegrityError, lambda: self.db_session.commit())
-        
-
     def test_query_all_one_video_source(self):
         """ test querying a video_source """
         args = {
             'name': 'abc',
             'url': 'http://123.com',
+            'source_id': '123', 
             'video': self.video,
         }
         video_source = VideoSource(**args)
@@ -144,12 +128,14 @@ class TestVideoSourceModel(unittest.TestCase):
         args = {
             'name': 'abc1',
             'url': 'http://123.com',
+            'source_id': '123', 
             'video': self.video,
         }
         video_source1 = VideoSource(**args)
         args = {
             'name': 'abc2',
             'url': 'http://1234.com',
+            'source_id': '123', 
             'video': self.video,
         }
         video_source2 = VideoSource(**args)

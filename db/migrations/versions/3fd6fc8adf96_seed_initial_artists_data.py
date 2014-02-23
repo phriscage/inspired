@@ -16,7 +16,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../../lib')
 from inspired.v1.lib.artists.models import Artist, artist_videos
-from inspired.v1.lib.videos.models import Video
+from inspired.v1.lib.videos.models import Video, video_products
 from inspired.v1.lib.video_sources.models import VideoSource
 from inspired.v1.lib.scenes.models import Scene
 from inspired.v1.lib.cast_members.models import CastMember
@@ -32,6 +32,7 @@ def upgrade():
         created_at=now, updated_at=now))
     op.execute(VideoSource.__table__.insert().values(name='youtube',
         url='https://www.youtube.com/watch?v=2PEG82Udb90', video_id=1,
+        source_id='2PEG82Udb90',
         created_at=now, updated_at=now))
     op.execute(Video.__table__.insert().values(name='second video',
         created_at=now, updated_at=now))
@@ -43,6 +44,11 @@ def upgrade():
         video_id=1))
     op.execute(artist_videos.insert().values(artist_id=1, 
         video_id=2))
+    op.execute(video_products.insert().values(video_id=1, product_id=1))
+    op.execute(video_products.insert().values(video_id=1, product_id=2))
+    op.execute(video_products.insert().values(video_id=1, product_id=3))
+    op.execute(video_products.insert().values(video_id=1, product_id=4))
+        
     #for i,l in enumerate(lowercase):
         #op.execute(Artist.__table__.insert().values(name=lowercase[i:i+3],
             #first_name=lowercase[i],

@@ -66,10 +66,15 @@ class Base(object):
         return self.field_items
 
     @property
+    def resource_id(self):
+        """ define the resource id for an object """
+        return self.id
+
+    @property
     def uri(self):
         """ return the uri path using class name as resource """
         resource = Converter().camel_to_snake(self.__class__.__name__)
-        return "/%s/%s" % (resource, self.id)
+        return "/%s/%s" % (resource, self.resource_id)
     
 
 Base.query = db_session.query_property()
