@@ -72,12 +72,14 @@ def create_app(uri):
     import user.views 
     import product.views
     import artist.views
+    import video.views
     #app.register_blueprint(landing.app)
     app.register_blueprint(core.views.core)
     app.register_blueprint(auth.views.auth, url_prefix='/auth')
     app.register_blueprint(user.views.user, url_prefix='/user')
     app.register_blueprint(product.views.product, url_prefix='/product')
     app.register_blueprint(artist.views.artist, url_prefix='/artist')
+    app.register_blueprint(video.views.video, url_prefix='/video')
 
     return app
 

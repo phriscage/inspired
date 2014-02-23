@@ -165,7 +165,7 @@ def get(product_id):
                 contains_eager(Product.product_retailers, 
                     ProductRetailer.retailer),
             ).filter(Product.id==product_id
-            ).first()
+            ).limit(100).all()[0]
         ## TODO need to determine best method to parse the NamedTuple for
         ## selecting specific columns
         #data = db_session.query(*columns).join(Product.product_type, 
@@ -173,16 +173,16 @@ def get(product_id):
             #).outerjoin(Product.product_images
             #).filter(Product.id==product_id
             #).first()
-    except NoResultFound as error:
-        message = '%s: %s' % (error.__class__.__name__, error)
-        return jsonify(message=message, success=False), 404
+    except IndexError as error:
+        message = "'%s' record does not exist." % product_id
+        return jsonify(message=message, success=False, error=404), 404
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
-        return jsonify(message=message, success=False), 500
+        return jsonify(message=message, success=False, error=500), 500
 
     if data is None:
         message = "'%s' record does not exist." % product_id
-        return jsonify(error=404, message=message, success=False), 404
+        return jsonify(message=message, success=False, error=404), 404
     else:
         ## need to use the JSONEncoder class for datetime objects
         response = make_response(json.dumps(dict(data=data, message=message,
