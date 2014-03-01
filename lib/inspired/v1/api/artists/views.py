@@ -57,7 +57,7 @@ def get_all():
     :statuscode 200: success
     :statuscode 404: artists do not exist
     """
-    columns = ['Artist.name', 'Artist.image_url',
+    columns = ['Artist.name', 'Artist.image_url', 'Artist.uri',
         'Artist.videos', 'Video.name', 'Video.uri']
     try:
         message = 'success'
