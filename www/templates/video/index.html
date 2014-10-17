@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block javascript %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/foundation/foundation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation/foundation.reveal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation/foundation.clearing.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.functions.js') }}"></script>
+{% endblock %}
+{% block content %}
+    {% include "user/settings/default.html" %}
+    <div class="content">
+      <div class="spinner-wrap"><div id="spinner"><img src="{{ url_for('static', filename='img/spinner.gif') }}"></div></div>
+      {% include "header/index.html" %}
+      <div class="row">
+        <div class="twelve columns artist-poster-container">
+          <div class="page-container">
+            <div class="video-poster">
+            </div>
+
+            <div id="share-box" class="reveal-modal">
+              <ul class="small-block-grid-4 large-block-grid-4">
+                <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Finvid.io" target="_blank"><img src="../../../static/img/webicon-facebook.svg" type="image/svg+xml" /></a></li>
+                <li><a href="https://twitter.com/share?url=http%3A%2F%2Finvid.io"  target="_blank"><img src="../../../static/img/webicon-twitter.svg" type="image/svg+xml" /></a></li>
+                <li><a href="https://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkentbrew%2F6851755809%2F&media=http%3A%2F%2Ffarm8.staticflickr.com%2F7027%2F6851755809_df5b2051c9_z.jpg&description=Next%20stop%3A%20Pinterest" data-pin-do="buttonPin"><img src="../../../static/img/webicon-pinterest.svg" type="image/svg+xml" /></a></li>
+                <li><a href="mailto:?subject=Check this mad outfit&amp;body=I found this outift on http://www.invid.io/~~~."><img src="../../../static/img/webicon-mail.svg" type="image/svg+xml" /></a></li>
+              </ul>
+              <a class="close-reveal-modal">&#215;</a>
+            </div>
+
+          <!--Looks LIST-->
+            <div class="row looks-container" id="looks-container">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="footer-container"><iframe id="footer-container-iframe" src="" seamless="yes"></iframe></div>
+    </div>  
+{% endblock %}
+{% block bottom_javascript %}
+    <script type="text/javascript">
+        var video_id = '{{ video_id }}';
+        var api_url = '{{ g.api_url }}';
+        var api_key = '{{ g.user.api_key }}';
+    </script>
+    <script src="{{ url_for('static', filename='js/video/base.js') }}"></script>
+{% endblock %}

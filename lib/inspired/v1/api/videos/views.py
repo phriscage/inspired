@@ -10,9 +10,10 @@ from database import db_session
 from inspired.v1.lib.videos.models import Video
 from inspired.v1.lib.video_sources.models import VideoSource
 from inspired.v1.lib.products.models import Product
+from inspired.v1.lib.ref_product_styles.models import RefProductStyle
 from inspired.v1.api.util import crossdomain
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.orm import joinedload, contains_eager, subqueryload
 
 from flask import Blueprint, jsonify, request, abort, make_response
 from inspired.v1.helpers.serializers import JSONEncoder, json_encoder
@@ -55,11 +56,10 @@ def get_all():
     :statuscode 200: success
     :statuscode 404: videos do not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Video.name,
+    columns = ['Video.name', 'Video.image_url',
         #Video.products, Product.upc]
-	Video.video_sources, VideoSource.name, VideoSource.url]
+	    'Video.video_sources', 'VideoSource.name', 'VideoSource.url', 
+        'VideoSource.source_id']
     try:
         message = 'success'
         data = Video.query.outerjoin(Video.video_sources
@@ -111,29 +111,31 @@ def get(video_id):
     :statuscode 200: success
     :statuscode 404: video does not exist
     """
-    ## columns can either be str or class Attributes, but class Attributes are
-    ## required to specify columns
-    columns = [Video.name,
-        Video.video_sources, VideoSource.name, VideoSource.url,
-        Video.products, Product.upc]
+    columns = ['Video.name', 'Video.image_url',
+        'Video.video_sources', 'VideoSource.name', 'VideoSource.url', 
+        'VideoSource.source_id',
+        'Video.products', 'Product.model', 'Product.uri', 'Product.brand',
+        'Product.product_images', 'ProductImage.url',
+        'Product.product_style', 'RefProductStyle.name']
     try:
         message = 'success'
-        data = Video.query.outerjoin(Video.video_sources, Video.products
+        data = Video.query.outerjoin(Video.video_sources, Video.products,
+            Product.product_style, Product.product_images,
             ).options(
                 contains_eager(Video.video_sources),
                 contains_eager(Video.products),
             ).filter(Video.id==video_id
-            ).first()
-    except NoResultFound as error:
-        message = '%s: %s' % (error.__class__.__name__, error)
-        return jsonify(message=message, success=False), 404
+            ).order_by(RefProductStyle.name).limit(100).all()[0]
+    except IndexError as error:
+        message = "'%s' record does not exist." % video_id
+        return jsonify(message=message, success=False, error=404), 404
     except Exception as error:
         message = '%s: %s' % (error.__class__.__name__, error)
-        return jsonify(message=message, success=False), 500
+        return jsonify(message=message, success=False, error=500), 500
 
     if data is None:
         message = "'%s' record does not exist." % video_id
-        return jsonify(error=404, message=message, success=False), 404
+        return jsonify(message=message, success=False, error=404), 404
     else:
         ## need to use the JSONEncoder class for datetime objects
         response = make_response(json.dumps(dict(data=data, message=message,

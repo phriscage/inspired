@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, create_session
 from sqlalchemy.ext.declarative import declarative_base as real_declarative_base
 from contextlib import contextmanager
+from inspired.v1.helpers.string_converter import Converter
 
 #engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
 #db_session = scoped_session(sessionmaker(autocommit=False,
@@ -36,7 +37,6 @@ class Base(object):
     """
     Add some default properties and methods to the SQLAlchemy declarative base.
     """
-
     @property
     def columns(self):
         """ list of database column names """
@@ -64,6 +64,18 @@ class Base(object):
     def to_json(self):
         """ return a dictionary for field items """
         return self.field_items
+
+    @property
+    def resource_id(self):
+        """ define the resource id for an object """
+        return self.id
+
+    @property
+    def uri(self):
+        """ return the uri path using class name as resource """
+        resource = Converter().camel_to_snake(self.__class__.__name__)
+        return "/%s/%s" % (resource, self.resource_id)
+    
 
 Base.query = db_session.query_property()
 

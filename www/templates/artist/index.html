@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block javascript %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/foundation/foundation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation/foundation.reveal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation/foundation.clearing.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.functions.js') }}"></script>
+{% endblock %}
+{% block content %}
+    {% include "user/settings/default.html" %}
+    <div class="content">
+      <div class="spinner-wrap"><div id="spinner"><img src="{{ url_for('static', filename='img/spinner.gif') }}"></div></div>
+      {% include "header/index.html" %}
+      <div class="row">
+        <div class="twelve columns artist-poster-container">
+          <div class="page-container">
+            <div class="artist-poster">
+              <div class="follow-btn"></div>
+            </div>
+
+            <div class="row" id="stats-tab">
+              <div class="small-12 small-centered columns">
+                <div class="artist-page-band"></div>
+              </div>
+            </div>
+
+          <!--MUSIC VIDEO LIST-->
+            <div class="row artist-video-list" id="artist-video-list">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="footer-container"><iframe id="footer-container-iframe" src="" seamless="yes"></iframe></div>
+    </div>  
+{% endblock %}
+{% block bottom_javascript %}
+    <script type="text/javascript">
+        var artist_id = '{{ artist_id }}';
+        var api_url = '{{ g.api_url }}';
+        var api_key = '{{ g.user.api_key }}';
+    </script>
+    <script src="{{ url_for('static', filename='js/artist/base.js') }}"></script>
+{% endblock %}
