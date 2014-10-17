@@ -1,3 +1,4 @@
 *.pyc
 .*
 !/.gitignore
+conf/inspired_config.py
